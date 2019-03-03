@@ -40,6 +40,7 @@
 #include <boost/bind.hpp>
 #include <memory>
 #include "rclcpp/rclcpp.hpp"
+#include <stdio.h>
 
 namespace collision_detection
 {
@@ -514,7 +515,7 @@ void CollisionWorldDistanceField::updateDistanceObject(const std::string& id, Di
   if (object)
   {
     RCLCPP_DEBUG(logger, "Updating/Adding Object '%s' with %i  shapes  to CollisionWorldDistanceField",
-                      object->id_, object->shapes_.size());
+                      object->id_.c_str(), object->shapes_.size());
     std::vector<PosedBodyPointDecompositionPtr> shape_points;
     for (unsigned int i = 0; i < object->shapes_.size(); i++)
     {
@@ -541,7 +542,7 @@ void CollisionWorldDistanceField::updateDistanceObject(const std::string& id, Di
   }
   else
   {
-    RCLCPP_DEBUG(logger,"Removing Object '%s' from CollisionWorldDistanceField", id);
+    RCLCPP_DEBUG(logger,("Removing Object '%s' from CollisionWorldDistanceField", id).c_str());
     dfce->posed_body_point_decompositions_.erase(id);
   }
 }

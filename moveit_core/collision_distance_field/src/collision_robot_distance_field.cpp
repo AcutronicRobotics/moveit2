@@ -296,7 +296,7 @@ bool CollisionRobotDistanceField::getSelfCollisions(const collision_detection::C
             con.body_name_1 = gsr->dfce_->attached_body_names_[i - gsr->dfce_->link_names_.size()];
           }
 
-          RCLCPP_DEBUG(logger, "Self collision detected for link %s ", con.body_name_1);
+          RCLCPP_DEBUG(logger, ("Self collision detected for link %s ", con.body_name_1).c_str());
 
           con.body_type_2 = collision_detection::BodyTypes::ROBOT_LINK;
           con.body_name_2 = "self";
@@ -870,7 +870,7 @@ DistanceFieldCacheEntryPtr CollisionRobotDistanceField::generateDistanceFieldCac
     for (unsigned int i = 0; i < child_joint_models.size(); i++)
     {
       updated_map[child_joint_models[i]->getName()] = true;
-      RCLCPP_DEBUG(logger, "Joint %s has been added to updated list ", child_joint_models[i]->getName());
+      RCLCPP_DEBUG(logger, "Joint %s has been added to updated list ", child_joint_models[i]->getName().c_str());
     }
   }
 
@@ -883,7 +883,7 @@ DistanceFieldCacheEntryPtr CollisionRobotDistanceField::generateDistanceFieldCac
     if (updated_map.count(*name_iter) == 0)
     {
       dfce->state_check_indices_.push_back(dfce->state_values_.size() - 1);
-      RCLCPP_DEBUG(logger, "Non-group joint %p will be checked for state changes", *name_iter);
+      RCLCPP_DEBUG(logger, ("Non-group joint %p will be checked for state changes", *name_iter).c_str());
     }
   }
 
@@ -1047,7 +1047,7 @@ void CollisionRobotDistanceField::addLinkBodyDecompositions(
   {
     if (link_models[i]->getShapes().empty())
     {
-      RCLCPP_WARN(logger, "Skipping model generation for link %s since it contains no geometries", link_models[i]->getName());
+      RCLCPP_WARN(logger, ("Skipping model generation for link %s since it contains no geometries", link_models[i]->getName()).c_str());
       continue;
     }
 
@@ -1174,13 +1174,14 @@ void CollisionRobotDistanceField::getGroupStateRepresentation(const DistanceFiel
         link_origin = link_bd->getBoundingSphereCenter() - 0.5 * link_size;
 
         RCLCPP_DEBUG(logger, "Creating PosedDistanceField for link %s with size [%i, %i , %i] and origin %i %i %i ",
-                          dfce->link_names_[i], link_size.x(), link_size.y(), link_size.z(), link_origin.x(), link_origin.y(), link_origin.z());
+                          dfce->link_names_[i].c_str(), link_size.x(), link_size.y(), link_size.z(), link_origin.x(), link_origin.y(), link_origin.z()
+                        );
 
         gsr->link_distance_fields_.push_back(PosedDistanceFieldPtr(new PosedDistanceField(
             link_size, link_origin, resolution_, max_propogation_distance_, use_signed_distance_field_)));
         gsr->link_distance_fields_.back()->addPointsToField(link_bd->getCollisionPoints());
         RCLCPP_DEBUG(logger, "Created PosedDistanceField for link %s with %d points",
-                          dfce->link_names_[i], link_bd->getCollisionPoints().size());
+                          dfce->link_names_[i].c_str(), link_bd->getCollisionPoints().size());
 
         gsr->link_body_decompositions_.back()->updatePose(state.getFrameTransform(ls->getName()));
         gsr->link_distance_fields_.back()->updatePose(state.getFrameTransform(ls->getName()));
@@ -1262,7 +1263,7 @@ bool CollisionRobotDistanceField::compareCacheEntryToState(const DistanceFieldCa
     if (diff > EPSILON)
     {
       RCLCPP_WARN(logger, "State for Variable %s has changed by %s radians",
-                    state.getVariableNames()[dfce->state_check_indices_[i]], diff);
+                    state.getVariableNames()[dfce->state_check_indices_[i]].c_str(), diff);
       return false;
     }
   }
