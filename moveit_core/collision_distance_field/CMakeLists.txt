@@ -18,6 +18,9 @@ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_V
 ament_target_dependencies(${MOVEIT_LIB_NAME}
   moveit_planning_scene
   moveit_distance_field
+  urdf
+  visualization_msgs
+  tf2_eigen
 )
 
 install(TARGETS ${MOVEIT_LIB_NAME}
@@ -27,6 +30,7 @@ install(TARGETS ${MOVEIT_LIB_NAME}
 install(DIRECTORY include/ DESTINATION include)
 
 # if(BUILD_TESTING)
+#   ament_add_gtest(test_voxel_grid test/test_voxel_grid.cpp)
 #   find_package(moveit_resources REQUIRED)
 #   include_directories(${moveit_resources_INCLUDE_DIRS})
 #
