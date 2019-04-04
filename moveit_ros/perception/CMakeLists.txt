@@ -27,7 +27,6 @@ if(APPLE)
 endif(APPLE)
 
 find_package(ament_cmake REQUIRED)
-# find_package(ros1_bridge REQUIRED)
 find_package(moveit_core REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(urdf REQUIRED)
@@ -71,15 +70,9 @@ set(THIS_PACKAGE_INCLUDE_DEPENDS
     sensor_msgs
     object_recognition_msgs
     tf2_geometry_msgs
-    ${EIGEN3_INCLUDE_DIRS}
-    ${OpenCV_INCLUDE_DIRS}
-    ${SYSTEM_GL_INCLUDE_DIRS}
-    ${X11_INCLUDE_DIR}
-    ${rclcpp_INCLUDE_DIRS}
-    ${Boost_INCLUDE_DIRS}
-    ${OPENGL_INCLUDE_DIR}
-    ${OCTOMAP_INCLUDE_DIR}
-    ${octomap_msgs_INCLUDE_DIR}
+    Eigen3
+    Octomap
+    pluginlib
 )
 
 include_directories(lazy_free_space_updater/include
