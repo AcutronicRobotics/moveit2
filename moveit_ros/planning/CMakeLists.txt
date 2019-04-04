@@ -7,13 +7,11 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-find_package(Boost REQUIRED system filesystem date_time program_options thread chrono)
+find_package(Boost REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(moveit_msgs REQUIRED)
 find_package(moveit_ros_perception REQUIRED)
-find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
-# find_package(dynamic_reconfigure REQUIRED)
 find_package(message_filters REQUIRED)
 find_package(srdfdom REQUIRED)
 find_package(urdf REQUIRED)
@@ -47,18 +45,17 @@ set(THIS_PACKAGE_INCLUDE_DIRS
 set(libraries
   moveit_rdf_loader
   moveit_kinematics_plugin_loader
-  moveit_robot_model_loader
-  moveit_constraint_sampler_manager_loader
-  moveit_planning_pipeline
-  moveit_trajectory_execution_manager
-  moveit_plan_execution
-  moveit_planning_scene_monitor
+  # moveit_robot_model_loader
+  # moveit_constraint_sampler_manager_loader
+  # moveit_planning_pipeline
+  # moveit_trajectory_execution_manager
+  # moveit_plan_execution
+  # moveit_planning_scene_monitor
   moveit_collision_plugin_loader
 )
 
 
 set(THIS_PACKAGE_INCLUDE_DEPENDS
-  pluginlib
   moveit_core
   moveit_ros_perception
   moveit_msgs
@@ -95,5 +92,6 @@ install(
 
 ament_export_include_directories(include)
 ament_export_libraries(${libraries})
+ament_export_dependencies(${THIS_PACKAGE_INCLUDE_DEPENDS})
 
 ament_package()
