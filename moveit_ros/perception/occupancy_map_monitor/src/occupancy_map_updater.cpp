@@ -55,28 +55,32 @@ void OccupancyMapUpdater::setMonitor(OccupancyMapMonitor* monitor)
 
 void OccupancyMapUpdater::readXmlParam(const std::string& param_name, double* value)
 {
-  std::string isInt ("integer");
-  //TODO: (anasarrak) update this with the shared node
+  std::string isInt("integer");
+  // TODO: (anasarrak) update this with the shared node
   auto node_occupancy_map = rclcpp::Node::make_shared("occupancy_map_server");
   auto ocupancy_map_monitor_parameters = std::make_shared<rclcpp::SyncParametersClient>(node_occupancy_map);
 
-  for (auto & parameter : ocupancy_map_monitor_parameters->get_parameters({param_name})) {
-    if(isInt.compare(parameter.get_type_name()) == 0){
+  for (auto& parameter : ocupancy_map_monitor_parameters->get_parameters({ param_name }))
+  {
+    if (isInt.compare(parameter.get_type_name()) == 0)
+    {
       *value = std::stoi(parameter.value_to_string());
-    }else{
+    }
+    else
+    {
       *value = std::stod(parameter.value_to_string());
     }
   }
-
 }
 
 void OccupancyMapUpdater::readXmlParam(const std::string& param_name, unsigned int* value)
 {
-  //TODO: (anasarrak) update this with the shared node
+  // TODO: (anasarrak) update this with the shared node
   auto node_occupancy_map = rclcpp::Node::make_shared("occupancy_map_server");
   auto ocupancy_map_monitor_parameters = std::make_shared<rclcpp::SyncParametersClient>(node_occupancy_map);
 
-  for (auto & parameter : ocupancy_map_monitor_parameters->get_parameters({param_name})) {
+  for (auto& parameter : ocupancy_map_monitor_parameters->get_parameters({ param_name }))
+  {
     *value = std::stoi(parameter.value_to_string());
   }
 }
@@ -88,7 +92,8 @@ bool OccupancyMapUpdater::updateTransformCache(const std::string& target_frame, 
     return transform_provider_callback_(target_frame, target_time, transform_cache_);
   else
   {
-    RCUTILS_LOG_ERROR_THROTTLE(RCUTILS_STEADY_TIME,1, "No callback provided for updating the transform cache for octomap updaters");
+    RCUTILS_LOG_ERROR_THROTTLE(RCUTILS_STEADY_TIME, 1,
+                               "No callback provided for updating the transform cache for octomap updaters");
     return false;
   }
 }

@@ -39,7 +39,6 @@
 #include <moveit/collision_detection/collision_plugin.h>
 #include "rclcpp/rclcpp.hpp"
 
-
 namespace collision_detection
 {
 rclcpp::Logger LOGGER = rclcpp::get_logger("moveit").get_child("collision_plugin_loader");

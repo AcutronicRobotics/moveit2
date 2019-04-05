@@ -418,8 +418,7 @@ void PropagationDistanceField::propagatePositive()
       // This will never happen.  update_direction_ is always set before voxel is added to bucket queue.
       if (vptr->update_direction_ < 0 || vptr->update_direction_ > 26)
       {
-        RCLCPP_ERROR(LOGGER, "PROGRAMMING ERROR: Invalid update direction detected: %d",
-                        vptr->update_direction_);
+        RCLCPP_ERROR(LOGGER, "PROGRAMMING ERROR: Invalid update direction detected: %d", vptr->update_direction_);
         continue;
       }
 
@@ -477,8 +476,7 @@ void PropagationDistanceField::propagateNegative()
       // negative_bucket_queue_.
       if (vptr->negative_update_direction_ < 0 || vptr->negative_update_direction_ > 26)
       {
-        RCLCPP_ERROR(LOGGER, "PROGRAMMING ERROR: Invalid update direction detected: %d",
-                        vptr->update_direction_);
+        RCLCPP_ERROR(LOGGER, "PROGRAMMING ERROR: Invalid update direction detected: %d", vptr->update_direction_);
         continue;
       }
 

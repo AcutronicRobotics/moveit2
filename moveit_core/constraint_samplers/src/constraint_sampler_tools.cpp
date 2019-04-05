@@ -42,7 +42,8 @@ rclcpp::Logger LOGGER = rclcpp::get_logger("moveit").get_child("constraint_sampl
 void constraint_samplers::visualizeDistribution(const moveit_msgs::msg::Constraints& constr,
                                                 const planning_scene::PlanningSceneConstPtr& scene,
                                                 const std::string& group, const std::string& link_name,
-                                                unsigned int sample_count, visualization_msgs::msg::MarkerArray& markers)
+                                                unsigned int sample_count,
+                                                visualization_msgs::msg::MarkerArray& markers)
 {
   visualizeDistribution(ConstraintSamplerManager::selectDefaultSampler(scene, group, constr), scene->getCurrentState(),
                         link_name, sample_count, markers);
@@ -67,9 +68,9 @@ double constraint_samplers::countSamplesPerSecond(const ConstraintSamplerPtr& sa
   robot_state::RobotState ks(reference_state);
   unsigned long int valid = 0;
   unsigned long int total = 0;
-  //TODO RCLCPP::WallTimer has not a .now() function, and there is no wallDuration (they use std::chrono::nanoseconds)
+  // TODO RCLCPP::WallTimer has not a .now() function, and there is no wallDuration (they use std::chrono::nanoseconds)
   // I'll use rclcpp::time, but this is something to fix.
-  rclcpp::Duration duration(1,0);
+  rclcpp::Duration duration(1, 0);
   rclcpp::Time end = rclcpp::Clock().now() + duration;
   // ros::WallTime end = ros::WallTime::now() + ros::WallDuration(1.0);
   do

@@ -70,8 +70,7 @@ CollisionRobotFCL::CollisionRobotFCL(const robot_model::RobotModelConstPtr& mode
         fcl_objs_[index] = FCLCollisionObjectConstPtr(new fcl::CollisionObjectd(g->collision_geometry_));
       }
       else
-        RCLCPP_ERROR(logger, "Unable to construct collision geometry for link '%s'",
-                        link->getName().c_str());
+        RCLCPP_ERROR(logger, "Unable to construct collision geometry for link '%s'", link->getName().c_str());
     }
 }
 

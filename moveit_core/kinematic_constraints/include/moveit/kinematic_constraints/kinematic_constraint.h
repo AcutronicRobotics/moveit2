@@ -863,7 +863,7 @@ protected:
   double target_radius_;             /**< \brief Storage for the target radius */
   double max_view_angle_;            /**< \brief Storage for the max view angle */
   double max_range_angle_;           /**< \brief Storage for the max range angle */
-  rclcpp::Clock clock_ros_;         /**< \brief ros2 clock for the time */
+  rclcpp::Clock clock_ros_;          /**< \brief ros2 clock for the time */
 };
 
 MOVEIT_CLASS_FORWARD(KinematicConstraintSet);
@@ -1078,11 +1078,13 @@ protected:
 
   std::vector<moveit_msgs::msg::JointConstraint> joint_constraints_; /**<  \brief Messages corresponding to all internal
                                                                    joint constraints */
-  std::vector<moveit_msgs::msg::PositionConstraint> position_constraints_;       /**<  \brief Messages corresponding to all
-                                                                               internal position constraints */
-  std::vector<moveit_msgs::msg::OrientationConstraint> orientation_constraints_; /**<  \brief Messages corresponding to all
+  std::vector<moveit_msgs::msg::PositionConstraint> position_constraints_; /**<  \brief Messages corresponding to all
+                                                                         internal position constraints */
+  std::vector<moveit_msgs::msg::OrientationConstraint> orientation_constraints_; /**<  \brief Messages corresponding to
+                                                                               all
                                                                                internal orientation constraints */
-  std::vector<moveit_msgs::msg::VisibilityConstraint> visibility_constraints_;   /**<  \brief Messages corresponding to all
+  std::vector<moveit_msgs::msg::VisibilityConstraint> visibility_constraints_;   /**<  \brief Messages corresponding to
+                                                                               all
                                                                                internal visibility constraints */
   moveit_msgs::msg::Constraints all_constraints_; /**<  \brief Messages corresponding to all internal constraints */
 };

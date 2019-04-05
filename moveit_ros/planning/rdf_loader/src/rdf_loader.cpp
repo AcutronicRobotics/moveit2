@@ -86,7 +86,7 @@ rdf_loader::RDFLoader::RDFLoader(const std::string& robot_description)
   if (!desc_parameters->has_parameter(srdf_description))
   {
     RCLCPP_ERROR(LOGGER, "Robot semantic description not found. Did you forget to define or remap '%s'?",
-                    srdf_description.c_str());
+                 srdf_description.c_str());
     return;
   }
 
@@ -98,7 +98,7 @@ rdf_loader::RDFLoader::RDFLoader(const std::string& robot_description)
     return;
   }
 
-  RCLCPP_DEBUG(LOGGER, "Loaded robot model in %d seconds",(std::chrono::system_clock::now() - start));
+  RCLCPP_DEBUG(LOGGER, "Loaded robot model in %d seconds", (std::chrono::system_clock::now() - start));
 }
 
 rdf_loader::RDFLoader::RDFLoader(const std::string& urdf_string, const std::string& srdf_string)
@@ -177,7 +177,7 @@ bool rdf_loader::RDFLoader::loadXacroFileToString(std::string& buffer, const std
     RCLCPP_ERROR(LOGGER, "File does not exist");
     return false;
   }
-  //TODO (anasarrak): Test ros2 xacro https://github.com/ros/xacro/tree/ros2 // https://github.com/bponsler/xacro
+  // TODO (anasarrak): Test ros2 xacro https://github.com/ros/xacro/tree/ros2 // https://github.com/bponsler/xacro
   std::string cmd = "ros2 run xacro xacro";
   for (std::vector<std::string>::const_iterator it = xacro_args.begin(); it != xacro_args.end(); ++it)
     cmd += *it + " ";

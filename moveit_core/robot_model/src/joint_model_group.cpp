@@ -347,9 +347,9 @@ void JointModelGroup::getVariableRandomPositionsNearBy(
         distance_map.find(active_joint_model_vector_[i]->getType());
     if (iter != distance_map.end())
       distance = iter->second;
-    else {
-      RCLCPP_WARN(LOGGER, "Did not pass in distance for '%s'",
-      active_joint_model_vector_[i]->getName().c_str());
+    else
+    {
+      RCLCPP_WARN(LOGGER, "Did not pass in distance for '%s'", active_joint_model_vector_[i]->getName().c_str());
     }
     active_joint_model_vector_[i]->getVariableRandomPositionsNearBy(
         rng, values + active_joint_model_start_index_[i], *active_joint_bounds[i],
@@ -531,10 +531,12 @@ const LinkModel* JointModelGroup::getOnlyOneEndEffectorTip() const
   getEndEffectorTips(tips);
   if (tips.size() == 1)
     return tips.front();
-  else if (tips.size() > 1) {
+  else if (tips.size() > 1)
+  {
     RCLCPP_ERROR(LOGGER, "More than one end effector tip found for joint model group, so cannot return only one");
   }
-  else {
+  else
+  {
     RCLCPP_ERROR(LOGGER, "No end effector tips found in joint model group");
   }
   return nullptr;
@@ -573,8 +575,8 @@ bool JointModelGroup::computeIKIndexBijection(const std::vector<std::string>& ik
       if (hasJointModel(ik_jnames[i]) && getJointModel(ik_jnames[i])->getType() == JointModel::FIXED)
         continue;
       RCLCPP_ERROR(LOGGER, "IK solver computes joint values for joint '%s' "
-                                         "but group '%s' does not contain such a joint.",
-                      ik_jnames[i].c_str(), getName().c_str());
+                           "but group '%s' does not contain such a joint.",
+                   ik_jnames[i].c_str(), getName().c_str());
       return false;
     }
     const JointModel* jm = getJointModel(ik_jnames[i]);
@@ -636,8 +638,7 @@ bool JointModelGroup::canSetStateFromIK(const std::string& tip) const
     // remove frame reference, if specified
     const std::string& tip_local = tip[0] == '/' ? tip.substr(1) : tip;
     const std::string& tip_frame_local = tip_frames[i][0] == '/' ? tip_frames[i].substr(1) : tip_frames[i];
-    RCLCPP_WARN(LOGGER, "comparing input tip: %s to this groups tip: %s ", tip_local.c_str(),
-                    tip_frame_local.c_str());
+    RCLCPP_WARN(LOGGER, "comparing input tip: %s to this groups tip: %s ", tip_local.c_str(), tip_frame_local.c_str());
 
     // Check if the IK solver's tip is the same as the frame of inquiry
     if (tip_local != tip_frame_local)
@@ -751,7 +752,7 @@ bool JointModelGroup::isValidVelocityMove(const double* from_joint_pose, const d
     {
       // TODO(davetcoleman) Support multiple variables
       RCLCPP_ERROR(LOGGER, "Attempting to check velocity bounds for waypoint move with joints that have multiple "
-                               "variables");
+                           "variables");
       return false;
     }
     const double max_velocity = (*var_bounds)[0].max_velocity_;

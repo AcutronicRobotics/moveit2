@@ -43,10 +43,8 @@ namespace moveit
 {
 namespace core
 {
-
 // Logger
 rclcpp::Logger logger_robot_state = rclcpp::get_logger("robot_state");
-
 };
 };
 

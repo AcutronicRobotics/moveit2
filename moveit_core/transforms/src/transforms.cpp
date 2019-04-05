@@ -43,14 +43,14 @@ namespace moveit
 {
 namespace core
 {
-
 // Logger
 rclcpp::Logger logger_transforms = rclcpp::get_logger("transforms");
 
 Transforms::Transforms(const std::string& target_frame) : target_frame_(target_frame)
 {
   boost::trim(target_frame_);
-  if (target_frame_.empty()){
+  if (target_frame_.empty())
+  {
     RCLCPP_ERROR(logger_transforms, "The target frame for MoveIt! Transforms cannot be empty.");
   }
   else
@@ -102,7 +102,7 @@ const Eigen::Isometry3d& Transforms::getTransform(const std::string& from_frame)
   }
 
   RCLCPP_ERROR(logger_transforms, "Unable to transform from frame '%s' to frame '%s'. Returning identity.",
-                  from_frame.c_str(), target_frame_.c_str());
+               from_frame.c_str(), target_frame_.c_str());
 
   // return identity
   static const Eigen::Isometry3d IDENTITY = Eigen::Isometry3d::Identity();
@@ -119,7 +119,8 @@ bool Transforms::canTransform(const std::string& from_frame) const
 
 void Transforms::setTransform(const Eigen::Isometry3d& t, const std::string& from_frame)
 {
-  if (from_frame.empty()){
+  if (from_frame.empty())
+  {
     RCLCPP_ERROR(logger_transforms, "Cannot record transform with empty name");
   }
   else
@@ -136,7 +137,7 @@ void Transforms::setTransform(const geometry_msgs::msg::TransformStamped& transf
   else
   {
     RCLCPP_ERROR(logger_transforms, "Given transform is to frame '%s', but frame '%s' was expected.",
-                    transform.child_frame_id.c_str(), target_frame_.c_str());
+                 transform.child_frame_id.c_str(), target_frame_.c_str());
   }
 }
 

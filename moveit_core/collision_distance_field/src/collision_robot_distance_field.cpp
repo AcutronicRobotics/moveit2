@@ -170,7 +170,7 @@ void CollisionRobotDistanceField::checkSelfCollisionHelper(const collision_detec
   if (!done)
   {
     getIntraGroupCollisions(req, res, gsr);
-    if(res.collision)
+    if (res.collision)
       RCLCPP_DEBUG(LOGGER, "Intra Group Collision found");
   }
 }
@@ -189,7 +189,8 @@ CollisionRobotDistanceField::getDistanceFieldCacheEntry(const std::string& group
   DistanceFieldCacheEntryConstPtr cur = distance_field_cache_entry_;
   if (group_name != cur->group_name_)
   {
-    RCLCPP_DEBUG(LOGGER,"No cache entry as group name changed from %s to %s", cur->group_name_.c_str(), group_name.c_str());
+    RCLCPP_DEBUG(LOGGER, "No cache entry as group name changed from %s to %s", cur->group_name_.c_str(),
+                 group_name.c_str());
     return ret;
   }
   else if (!compareCacheEntryToState(cur, state))
@@ -201,7 +202,7 @@ CollisionRobotDistanceField::getDistanceFieldCacheEntry(const std::string& group
   }
   else if (acm && !compareCacheEntryToAllowedCollisionMatrix(cur, *acm))
   {
-    RCLCPP_DEBUG(LOGGER,"Regenerating distance field as some relevant part of the acm changed");
+    RCLCPP_DEBUG(LOGGER, "Regenerating distance field as some relevant part of the acm changed");
     return ret;
   }
   return cur;
@@ -240,8 +241,8 @@ void CollisionRobotDistanceField::checkSelfCollision(const collision_detection::
 {
   if (gsr)
   {
-    RCLCPP_WARN(LOGGER,"Shouldn't be calling this function with initialized gsr - ACM "
-             "will be ignored");
+    RCLCPP_WARN(LOGGER, "Shouldn't be calling this function with initialized gsr - ACM "
+                        "will be ignored");
   }
   checkSelfCollisionHelper(req, res, state, &acm, gsr);
 }
@@ -318,7 +319,7 @@ bool CollisionRobotDistanceField::getSelfCollisions(const collision_detection::C
                                               *sphere_centers_1, max_propogation_distance_, collision_tolerance_);
       if (coll)
       {
-        RCLCPP_DEBUG(LOGGER,"Link %s in self collision", gsr->dfce_->link_names_[i].c_str());
+        RCLCPP_DEBUG(LOGGER, "Link %s in self collision", gsr->dfce_->link_names_[i].c_str());
         res.collision = true;
         return true;
       }
@@ -705,7 +706,7 @@ DistanceFieldCacheEntryPtr CollisionRobotDistanceField::generateDistanceFieldCac
 
   if (robot_model_->getJointModelGroup(group_name) == nullptr)
   {
-    RCLCPP_WARN(LOGGER,"No group %s", group_name.c_str());
+    RCLCPP_WARN(LOGGER, "No group %s", group_name.c_str());
     return dfce;
   }
 
@@ -717,8 +718,8 @@ DistanceFieldCacheEntryPtr CollisionRobotDistanceField::generateDistanceFieldCac
   }
   else
   {
-    RCLCPP_WARN(LOGGER,"Allowed Collision Matrix is null, enabling all collisions "
-                    "in the DistanceFieldCacheEntry");
+    RCLCPP_WARN(LOGGER, "Allowed Collision Matrix is null, enabling all collisions "
+                        "in the DistanceFieldCacheEntry");
   }
 
   // generateAllowedCollisionInformation(dfce);
@@ -753,7 +754,7 @@ DistanceFieldCacheEntryPtr CollisionRobotDistanceField::generateDistanceFieldCac
 
     if (!found)
     {
-      RCLCPP_DEBUG(LOGGER,"No link state found for link %s", dfce->link_names_[i].c_str());
+      RCLCPP_DEBUG(LOGGER, "No link state found for link %s", dfce->link_names_[i].c_str());
       continue;
     }
 
@@ -891,8 +892,8 @@ DistanceFieldCacheEntryPtr CollisionRobotDistanceField::generateDistanceFieldCac
   {
     if (dfce->distance_field_)
     {
-      RCLCPP_DEBUG(LOGGER,"CollisionRobot skipping distance field generation, "
-                       "will use existing one");
+      RCLCPP_DEBUG(LOGGER, "CollisionRobot skipping distance field generation, "
+                           "will use existing one");
     }
     else
     {
@@ -956,11 +957,12 @@ void CollisionRobotDistanceField::addLinkBodyDecompositions(double resolution)
   {
     if (link_models[i]->getShapes().empty())
     {
-      RCLCPP_WARN(LOGGER,"No collision geometry for link model %s though there should be", link_models[i]->getName().c_str());
+      RCLCPP_WARN(LOGGER, "No collision geometry for link model %s though there should be",
+                  link_models[i]->getName().c_str());
       continue;
     }
 
-    RCLCPP_DEBUG(LOGGER,"Generating model for %s", link_models[i]->getName().c_str());
+    RCLCPP_DEBUG(LOGGER, "Generating model for %s", link_models[i]->getName().c_str());
     BodyDecompositionConstPtr bd(new BodyDecomposition(link_models[i]->getShapes(),
                                                        link_models[i]->getCollisionOriginTransforms(), resolution,
                                                        getLinkPadding(link_models[i]->getName())));
@@ -1047,7 +1049,9 @@ void CollisionRobotDistanceField::addLinkBodyDecompositions(
   {
     if (link_models[i]->getShapes().empty())
     {
-      RCLCPP_WARN(LOGGER, ("Skipping model generation for link %s since it contains no geometries", link_models[i]->getName()).c_str());
+      RCLCPP_WARN(
+          LOGGER,
+          ("Skipping model generation for link %s since it contains no geometries", link_models[i]->getName()).c_str());
       continue;
     }
 
@@ -1055,7 +1059,7 @@ void CollisionRobotDistanceField::addLinkBodyDecompositions(
                                                   link_models[i]->getCollisionOriginTransforms(), resolution,
                                                   getLinkPadding(link_models[i]->getName())));
 
-    RCLCPP_DEBUG(LOGGER,"Generated model for %s", link_models[i]->getName().c_str());
+    RCLCPP_DEBUG(LOGGER, "Generated model for %s", link_models[i]->getName().c_str());
 
     if (link_spheres.find(link_models[i]->getName()) != link_spheres.end())
     {
@@ -1064,8 +1068,8 @@ void CollisionRobotDistanceField::addLinkBodyDecompositions(
     link_body_decomposition_vector_.push_back(bd);
     link_body_decomposition_index_map_[link_models[i]->getName()] = link_body_decomposition_vector_.size() - 1;
   }
-    // RCLCPP_DEBUG_FUNCTION(LOGGER, __FUNCTION__," Finished ");
-    RCLCPP_DEBUG(LOGGER," Finished ");
+  // RCLCPP_DEBUG_FUNCTION(LOGGER, __FUNCTION__," Finished ");
+  RCLCPP_DEBUG(LOGGER, " Finished ");
 }
 
 PosedBodySphereDecompositionPtr CollisionRobotDistanceField::getPosedLinkBodySphereDecomposition(
@@ -1115,14 +1119,14 @@ void CollisionRobotDistanceField::updateGroupStateRepresentationState(const move
     const moveit::core::AttachedBody* att = state.getAttachedBody(gsr->dfce_->attached_body_names_[i]);
     if (!att)
     {
-      RCLCPP_WARN(LOGGER,"Attached body discrepancy");
+      RCLCPP_WARN(LOGGER, "Attached body discrepancy");
       continue;
     }
 
     // TODO: This logic for checking attached body count might be incorrect
     if (gsr->attached_body_decompositions_.size() != att->getShapes().size())
     {
-      RCLCPP_WARN(LOGGER,"Attached body size discrepancy");
+      RCLCPP_WARN(LOGGER, "Attached body size discrepancy");
       continue;
     }
 
@@ -1174,14 +1178,14 @@ void CollisionRobotDistanceField::getGroupStateRepresentation(const DistanceFiel
         link_origin = link_bd->getBoundingSphereCenter() - 0.5 * link_size;
 
         RCLCPP_DEBUG(LOGGER, "Creating PosedDistanceField for link %s with size [%i, %i , %i] and origin %i %i %i ",
-                          dfce->link_names_[i].c_str(), link_size.x(), link_size.y(), link_size.z(), link_origin.x(), link_origin.y(), link_origin.z()
-                        );
+                     dfce->link_names_[i].c_str(), link_size.x(), link_size.y(), link_size.z(), link_origin.x(),
+                     link_origin.y(), link_origin.z());
 
         gsr->link_distance_fields_.push_back(PosedDistanceFieldPtr(new PosedDistanceField(
             link_size, link_origin, resolution_, max_propogation_distance_, use_signed_distance_field_)));
         gsr->link_distance_fields_.back()->addPointsToField(link_bd->getCollisionPoints());
-        RCLCPP_DEBUG(LOGGER, "Created PosedDistanceField for link %s with %d points",
-                          dfce->link_names_[i].c_str(), link_bd->getCollisionPoints().size());
+        RCLCPP_DEBUG(LOGGER, "Created PosedDistanceField for link %s with %d points", dfce->link_names_[i].c_str(),
+                     link_bd->getCollisionPoints().size());
 
         gsr->link_body_decompositions_.back()->updatePose(state.getFrameTransform(ls->getName()));
         gsr->link_distance_fields_.back()->updatePose(state.getFrameTransform(ls->getName()));
@@ -1263,7 +1267,7 @@ bool CollisionRobotDistanceField::compareCacheEntryToState(const DistanceFieldCa
     if (diff > EPSILON)
     {
       RCLCPP_WARN(LOGGER, "State for Variable %s has changed by %s radians",
-                    state.getVariableNames()[dfce->state_check_indices_[i]].c_str(), diff);
+                  state.getVariableNames()[dfce->state_check_indices_[i]].c_str(), diff);
       return false;
     }
   }
@@ -1306,7 +1310,7 @@ bool CollisionRobotDistanceField::compareCacheEntryToAllowedCollisionMatrix(
 {
   if (dfce->acm_.getSize() != acm.getSize())
   {
-    RCLCPP_DEBUG(LOGGER,"Allowed collision matrix size mismatch");
+    RCLCPP_DEBUG(LOGGER, "Allowed collision matrix size mismatch");
     return false;
   }
   std::vector<const moveit::core::AttachedBody*> attached_bodies;

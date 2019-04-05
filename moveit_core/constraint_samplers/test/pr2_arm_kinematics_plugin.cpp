@@ -48,8 +48,7 @@ using namespace std;
 
 namespace pr2_arm_kinematics
 {
-
-  rclcpp::Logger LOGGER = rclcpp::get_logger("pr2_arm_kinematics_plugin");
+rclcpp::Logger LOGGER = rclcpp::get_logger("pr2_arm_kinematics_plugin");
 
 bool PR2ArmIKSolver::getCount(int& count, const int& max_count, const int& min_count)
 {
@@ -180,10 +179,9 @@ int PR2ArmIKSolver::cartToJntSearch(const KDL::JntArray& q_in, const KDL::Frame&
   int num_negative_increments =
       (int)((initial_guess - pr2_arm_ik_.solver_info_.limits[free_angle_].min_position) / search_discretization_angle_);
   if (verbose)
-    RCLCPP_WARN(LOGGER, "%f %f %f %d %d \n\n", initial_guess,
-                    pr2_arm_ik_.solver_info_.limits[free_angle_].max_position,
-                    pr2_arm_ik_.solver_info_.limits[free_angle_].min_position, num_positive_increments,
-                    num_negative_increments);
+    RCLCPP_WARN(LOGGER, "%f %f %f %d %d \n\n", initial_guess, pr2_arm_ik_.solver_info_.limits[free_angle_].max_position,
+                pr2_arm_ik_.solver_info_.limits[free_angle_].min_position, num_positive_increments,
+                num_negative_increments);
   while (loop_time < timeout)
   {
     if (CartToJnt(q_init, p_in, q_out) > 0)
@@ -216,12 +214,12 @@ bool getKDLChain(const urdf::ModelInterface& model, const std::string& root_name
   KDL::Tree tree;
   if (!kdl_parser::treeFromUrdfModel(model, tree))
   {
-    RCLCPP_ERROR(LOGGER,"Could not initialize tree object");
+    RCLCPP_ERROR(LOGGER, "Could not initialize tree object");
     return false;
   }
   if (!tree.getChain(root_name, tip_name, kdl_chain))
   {
-    RCLCPP_ERROR(LOGGER,"Could not initialize chain object for base %s tip %s", root_name , tip_name);
+    RCLCPP_ERROR(LOGGER, "Could not initialize chain object for base %s tip %s", root_name, tip_name);
     return false;
   }
   return true;
@@ -283,7 +281,7 @@ bool PR2ArmKinematicsPlugin::initialize(const moveit::core::RobotModel& robot_mo
   if (!getKDLChain(*robot_model.getURDF(), base_frame_, tip_frames_[0], kdl_chain_))
   {
     active_ = false;
-    RCLCPP_ERROR(LOGGER,"Could not load kdl tree");
+    RCLCPP_ERROR(LOGGER, "Could not load kdl tree");
   }
   jnt_to_pose_solver_.reset(new KDL::ChainFkSolverPos_recursive(kdl_chain_));
   free_angle_ = 2;
@@ -292,7 +290,7 @@ bool PR2ArmKinematicsPlugin::initialize(const moveit::core::RobotModel& robot_mo
                                                                   search_discretization, free_angle_));
   if (!pr2_arm_ik_solver_->active_)
   {
-    RCLCPP_ERROR(LOGGER,"Could not load ik");
+    RCLCPP_ERROR(LOGGER, "Could not load ik");
     active_ = false;
   }
   else
@@ -305,18 +303,15 @@ bool PR2ArmKinematicsPlugin::initialize(const moveit::core::RobotModel& robot_mo
     {
       for (unsigned int i = 0; i < ik_solver_info_.joint_names.size(); i++)
       {
-        RCLCPP_WARN(LOGGER, "PR2Kinematics:: joint name: %s",
-                        ik_solver_info_.joint_names[i].c_str());
+        RCLCPP_WARN(LOGGER, "PR2Kinematics:: joint name: %s", ik_solver_info_.joint_names[i].c_str());
       }
       for (unsigned int i = 0; i < ik_solver_info_.link_names.size(); i++)
       {
-        RCLCPP_WARN(LOGGER, "PR2Kinematics can solve IK for %s",
-                        ik_solver_info_.link_names[i].c_str());
+        RCLCPP_WARN(LOGGER, "PR2Kinematics can solve IK for %s", ik_solver_info_.link_names[i].c_str());
       }
       for (unsigned int i = 0; i < fk_solver_info_.link_names.size(); i++)
       {
-        RCLCPP_WARN(LOGGER, "PR2Kinematics can solve FK for %s",
-                        fk_solver_info_.link_names[i].c_str());
+        RCLCPP_WARN(LOGGER, "PR2Kinematics can solve FK for %s", fk_solver_info_.link_names[i].c_str());
       }
       RCLCPP_WARN(LOGGER, "PR2KinematicsPlugin::active for %s", group_name.c_str());
     }
@@ -325,8 +320,9 @@ bool PR2ArmKinematicsPlugin::initialize(const moveit::core::RobotModel& robot_mo
   return active_;
 }
 
-bool PR2ArmKinematicsPlugin::getPositionIK(const geometry_msgs::msg::Pose& ik_pose, const std::vector<double>& ik_seed_state,
-                                           std::vector<double>& solution, moveit_msgs::msg::MoveItErrorCodes& error_code,
+bool PR2ArmKinematicsPlugin::getPositionIK(const geometry_msgs::msg::Pose& ik_pose,
+                                           const std::vector<double>& ik_seed_state, std::vector<double>& solution,
+                                           moveit_msgs::msg::MoveItErrorCodes& error_code,
                                            const kinematics::KinematicsQueryOptions& options) const
 {
   return false;
@@ -334,12 +330,13 @@ bool PR2ArmKinematicsPlugin::getPositionIK(const geometry_msgs::msg::Pose& ik_po
 
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose& ik_pose,
                                               const std::vector<double>& ik_seed_state, double timeout,
-                                              std::vector<double>& solution, moveit_msgs::msg::MoveItErrorCodes& error_code,
+                                              std::vector<double>& solution,
+                                              moveit_msgs::msg::MoveItErrorCodes& error_code,
                                               const kinematics::KinematicsQueryOptions& options) const
 {
   if (!active_)
   {
-    RCLCPP_ERROR(LOGGER,"kinematics not active");
+    RCLCPP_ERROR(LOGGER, "kinematics not active");
     error_code.val = error_code.PLANNING_FAILED;
     return false;
   }
@@ -383,7 +380,8 @@ bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose& ik
 bool PR2ArmKinematicsPlugin::searchPositionIK(const geometry_msgs::msg::Pose& ik_pose,
                                               const std::vector<double>& ik_seed_state, double timeout,
                                               const std::vector<double>& consistency_limit,
-                                              std::vector<double>& solution, moveit_msgs::msg::MoveItErrorCodes& error_code,
+                                              std::vector<double>& solution,
+                                              moveit_msgs::msg::MoveItErrorCodes& error_code,
                                               const kinematics::KinematicsQueryOptions& options) const
 {
   return false;
@@ -419,7 +417,7 @@ const std::vector<std::string>& PR2ArmKinematicsPlugin::getJointNames() const
 {
   if (!active_)
   {
-    RCLCPP_ERROR(LOGGER,"kinematics not active");
+    RCLCPP_ERROR(LOGGER, "kinematics not active");
   }
   return ik_solver_info_.joint_names;
 }
@@ -428,7 +426,7 @@ const std::vector<std::string>& PR2ArmKinematicsPlugin::getLinkNames() const
 {
   if (!active_)
   {
-    RCLCPP_ERROR(LOGGER,"kinematics not active");
+    RCLCPP_ERROR(LOGGER, "kinematics not active");
   }
   return fk_solver_info_.link_names;
 }

@@ -134,8 +134,8 @@ private:
 
   /** @brief Load octree from a binary file (gets rid of current octree data) */
   bool loadMapCallback(const std::shared_ptr<rmw_request_id_t> request_header,
-                          const std::shared_ptr<moveit_msgs::srv::LoadMap::Request> req,
-                          std::shared_ptr<moveit_msgs::srv::LoadMap::Response> res);
+                       const std::shared_ptr<moveit_msgs::srv::LoadMap::Request> req,
+                       std::shared_ptr<moveit_msgs::srv::LoadMap::Response> res);
 
   bool getShapeTransformCache(std::size_t index, const std::string& target_frame, const rclcpp::Time& target_time,
                               ShapeTransformCache& cache) const;
@@ -162,7 +162,6 @@ private:
   rclcpp::Service<moveit_msgs::srv::LoadMap>::SharedPtr load_map_srv_;
 
   std::shared_ptr<rclcpp::Node> node_;
-
 };
 }
 

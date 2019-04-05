@@ -48,7 +48,8 @@
 
 namespace trajectory_processing
 {
-rclcpp::Logger LOGGER = rclcpp::get_logger("moveit").get_child("trajectory_processing.time_optimal_trajectory_generation");
+rclcpp::Logger LOGGER =
+    rclcpp::get_logger("moveit").get_child("trajectory_processing.time_optimal_trajectory_generation");
 constexpr double EPS = 0.000001;
 class LinearPathSegment : public PathSegment
 {
@@ -892,12 +893,12 @@ bool TimeOptimalTrajectoryGeneration::computeTimeStamps(robot_trajectory::RobotT
   else if (max_velocity_scaling_factor == 0.0)
   {
     RCLCPP_DEBUG(LOGGER, "A max_velocity_scaling_factor of 0.0 was specified, defaulting to %f instead.",
-                    velocity_scaling_factor);
+                 velocity_scaling_factor);
   }
   else
   {
     RCLCPP_WARN(LOGGER, "Invalid max_velocity_scaling_factor %f specified, defaulting to %f instead.",
-                   max_velocity_scaling_factor, velocity_scaling_factor);
+                max_velocity_scaling_factor, velocity_scaling_factor);
   }
 
   double acceleration_scaling_factor = 1.0;
@@ -908,12 +909,12 @@ bool TimeOptimalTrajectoryGeneration::computeTimeStamps(robot_trajectory::RobotT
   else if (max_acceleration_scaling_factor == 0.0)
   {
     RCLCPP_DEBUG(LOGGER, "A max_acceleration_scaling_factor of 0.0 was specified, defaulting to %f instead.",
-                    acceleration_scaling_factor);
+                 acceleration_scaling_factor);
   }
   else
   {
     RCLCPP_WARN(LOGGER, "Invalid max_acceleration_scaling_factor %f specified, defaulting to %f instead.",
-                   max_acceleration_scaling_factor, acceleration_scaling_factor);
+                max_acceleration_scaling_factor, acceleration_scaling_factor);
   }
 
   // This lib does not actually work properly when angles wrap around, so we need to unwind the path first

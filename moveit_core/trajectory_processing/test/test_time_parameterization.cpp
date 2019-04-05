@@ -47,7 +47,6 @@
 // Logger
 rclcpp::Logger logger_trajectory_processing_test = rclcpp::get_logger("trajectory_processing");
 
-
 // Static variables used in all tests
 moveit::core::RobotModelConstPtr RMODEL = moveit::core::loadTestingRobotModel("pr2");
 robot_trajectory::RobotTrajectory TRAJECTORY(RMODEL, "right_arm");

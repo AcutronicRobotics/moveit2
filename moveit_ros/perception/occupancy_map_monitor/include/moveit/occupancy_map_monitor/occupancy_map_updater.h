@@ -49,7 +49,8 @@ typedef unsigned int ShapeHandle;
 typedef std::map<ShapeHandle, Eigen::Isometry3d, std::less<ShapeHandle>,
                  Eigen::aligned_allocator<std::pair<const ShapeHandle, Eigen::Isometry3d> > >
     ShapeTransformCache;
-typedef boost::function<bool(const std::string& target_frame, const rclcpp::Time& target_time, ShapeTransformCache& cache)>
+typedef boost::function<bool(const std::string& target_frame, const rclcpp::Time& target_time,
+                             ShapeTransformCache& cache)>
     TransformCacheProvider;
 
 class OccupancyMapMonitor;

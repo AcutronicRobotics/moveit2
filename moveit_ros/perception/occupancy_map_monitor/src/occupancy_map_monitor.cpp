@@ -34,7 +34,6 @@
 
 /* Author: Ioan Sucan, Jon Binney */
 
-
 #include <moveit_msgs/srv/save_map.hpp>
 #include <moveit_msgs/srv/load_map.hpp>
 #include <moveit/occupancy_map_monitor/occupancy_map.h>
@@ -61,8 +60,9 @@ OccupancyMapMonitor::OccupancyMapMonitor(const std::shared_ptr<tf2_ros::Buffer>&
   initialize();
 }
 
-OccupancyMapMonitor::OccupancyMapMonitor(const std::shared_ptr<tf2_ros::Buffer>& tf_buffer, std::shared_ptr<rclcpp::Node> node,
-                                         const std::string& map_frame, double map_resolution)
+OccupancyMapMonitor::OccupancyMapMonitor(const std::shared_ptr<tf2_ros::Buffer>& tf_buffer,
+                                         std::shared_ptr<rclcpp::Node> node, const std::string& map_frame,
+                                         double map_resolution)
   : tf_buffer_(tf_buffer)
   , map_frame_(map_frame)
   , map_resolution_(map_resolution)
@@ -78,25 +78,31 @@ void OccupancyMapMonitor::initialize()
   // auto node_occupancy_map = rclcpp::Node::make_shared("occupancy_map_server");
   auto ocupancy_map_monitor_parameters = std::make_shared<rclcpp::SyncParametersClient>(node_);
 
-  for (auto & parameter : ocupancy_map_monitor_parameters->get_parameters({"octomap_resolution"})) {
-      if (map_resolution_ <= std::numeric_limits<double>::epsilon()){
-          map_resolution_ = 0.1;
-          RCLCPP_WARN(logger_occupancy_map_monitor,"Resolution not specified for Octomap. Assuming resolution = %g instead", map_resolution_);
-      }
-	}
-
-  RCLCPP_DEBUG(logger_occupancy_map_monitor,"Using resolution = %lf m for building octomap", map_resolution_);
-
-  if (map_frame_.empty()){
-    for (auto & parameter : ocupancy_map_monitor_parameters->get_parameters({"occupancy_map_server"})) {
-        map_frame_ = parameter.value_to_string();
+  for (auto& parameter : ocupancy_map_monitor_parameters->get_parameters({ "octomap_resolution" }))
+  {
+    if (map_resolution_ <= std::numeric_limits<double>::epsilon())
+    {
+      map_resolution_ = 0.1;
+      RCLCPP_WARN(logger_occupancy_map_monitor,
+                  "Resolution not specified for Octomap. Assuming resolution = %g instead", map_resolution_);
     }
-    RCLCPP_WARN(logger_occupancy_map_monitor,"No target frame specified for Octomap. No transforms will be applied to received data.");
   }
 
+  RCLCPP_DEBUG(logger_occupancy_map_monitor, "Using resolution = %lf m for building octomap", map_resolution_);
+
+  if (map_frame_.empty())
+  {
+    for (auto& parameter : ocupancy_map_monitor_parameters->get_parameters({ "occupancy_map_server" }))
+    {
+      map_frame_ = parameter.value_to_string();
+    }
+    RCLCPP_WARN(logger_occupancy_map_monitor,
+                "No target frame specified for Octomap. No transforms will be applied to received data.");
+  }
 
   if (!tf_buffer_ && !map_frame_.empty())
-    RCLCPP_WARN(logger_occupancy_map_monitor,"Target frame specified but no TF instance specified. No transforms will be applied to received data.");
+    RCLCPP_WARN(logger_occupancy_map_monitor,
+                "Target frame specified but no TF instance specified. No transforms will be applied to received data.");
 
   tree_.reset(new OccMapTree(map_resolution_));
   tree_const_ = tree_;
@@ -118,7 +124,8 @@ void OccupancyMapMonitor::initialize()
   //
   //         if (!sensor_list[i].hasMember("sensor_plugin"))
   //         {
-  //           RCLCPP_ERROR(logger_occupancy_map_monitor,"No sensor plugin specified for octomap updater %d; ignoring.", i);
+  //           RCLCPP_ERROR(logger_occupancy_map_monitor,"No sensor plugin specified for octomap updater %d; ignoring.",
+  //           i);
   //           continue;
   //         }
   //
@@ -138,7 +145,8 @@ void OccupancyMapMonitor::initialize()
   //           }
   //           catch (pluginlib::PluginlibException& ex)
   //           {
-  //             ROS_ERROR(logger_occupancy_map_monitor,"Exception while creating octomap updater plugin loader %s ", ex.what());
+  //             ROS_ERROR(logger_occupancy_map_monitor,"Exception while creating octomap updater plugin loader %s ",
+  //             ex.what());
   //           }
   //         }
   //
@@ -150,20 +158,23 @@ void OccupancyMapMonitor::initialize()
   //         }
   //         catch (pluginlib::PluginlibException& ex)
   //         {
-  //           RCLCPP_ERROR(logger_occupancy_map_monitor,"Exception while loading octomap updater '%s': %s",sensor_plugin, ex.what());
+  //           RCLCPP_ERROR(logger_occupancy_map_monitor,"Exception while loading octomap updater '%s':
+  //           %s",sensor_plugin, ex.what());
   //         }
   //         if (up)
   //         {
   //           /* pass the params struct directly in to the updater */
   //           if (!up->setParams(sensor_list[i]))
   //           {
-  //             RCLCPP_ERROR(logger_occupancy_map_monitor,"Failed to configure updater of type %s", up->getType().c_str());
+  //             RCLCPP_ERROR(logger_occupancy_map_monitor,"Failed to configure updater of type %s",
+  //             up->getType().c_str());
   //             continue;
   //           }
   //
   //           if (!up->initialize())
   //           {
-  //             RCLCPP_ERROR(logger_occupancy_map_monitor,"Unable to initialize map updater of type %s (plugin %s)", up->getType().c_str(),
+  //             RCLCPP_ERROR(logger_occupancy_map_monitor,"Unable to initialize map updater of type %s (plugin %s)",
+  //             up->getType().c_str(),
   //                       sensor_plugin.c_str());
   //             continue;
   //           }
@@ -182,19 +193,18 @@ void OccupancyMapMonitor::initialize()
 
   /* advertise a service for loading octomaps from disk */
 
-  std::function<bool( std::shared_ptr<rmw_request_id_t>,
-                       const std::shared_ptr<moveit_msgs::srv::SaveMap::Request>,
-                       std::shared_ptr<moveit_msgs::srv::SaveMap::Response>)> cb_savemap_function = std::bind(
-         &OccupancyMapMonitor::saveMapCallback, this, std::placeholders::_1,  std::placeholders::_2,  std::placeholders::_3);
+  std::function<bool(std::shared_ptr<rmw_request_id_t>, const std::shared_ptr<moveit_msgs::srv::SaveMap::Request>,
+                     std::shared_ptr<moveit_msgs::srv::SaveMap::Response>)>
+      cb_savemap_function = std::bind(&OccupancyMapMonitor::saveMapCallback, this, std::placeholders::_1,
+                                      std::placeholders::_2, std::placeholders::_3);
 
-  std::function<bool( std::shared_ptr<rmw_request_id_t>,
-                      const std::shared_ptr<moveit_msgs::srv::LoadMap::Request>,
-                      std::shared_ptr<moveit_msgs::srv::LoadMap::Response>)> cb_loadmap_function = std::bind(
-        &OccupancyMapMonitor::loadMapCallback, this, std::placeholders::_1,  std::placeholders::_2,  std::placeholders::_3);
+  std::function<bool(std::shared_ptr<rmw_request_id_t>, const std::shared_ptr<moveit_msgs::srv::LoadMap::Request>,
+                     std::shared_ptr<moveit_msgs::srv::LoadMap::Response>)>
+      cb_loadmap_function = std::bind(&OccupancyMapMonitor::loadMapCallback, this, std::placeholders::_1,
+                                      std::placeholders::_2, std::placeholders::_3);
 
   save_map_srv_ = node_->create_service<moveit_msgs::srv::SaveMap>("save_map", cb_savemap_function);
   load_map_srv_ = node_->create_service<moveit_msgs::srv::LoadMap>("load_map", cb_loadmap_function);
-
 }
 
 void OccupancyMapMonitor::addUpdater(const OccupancyMapUpdaterPtr& updater)
@@ -222,7 +232,7 @@ void OccupancyMapMonitor::addUpdater(const OccupancyMapUpdaterPtr& updater)
       updater->setTransformCacheCallback(transform_cache_callback_);
   }
   else
-    RCLCPP_ERROR(logger_occupancy_map_monitor,"NULL updater was specified");
+    RCLCPP_ERROR(logger_occupancy_map_monitor, "NULL updater was specified");
 }
 
 void OccupancyMapMonitor::publishDebugInformation(bool flag)
@@ -298,7 +308,7 @@ bool OccupancyMapMonitor::getShapeTransformCache(std::size_t index, const std::s
         std::map<ShapeHandle, ShapeHandle>::const_iterator jt = mesh_handles_[index].find(it->first);
         if (jt == mesh_handles_[index].end())
         {
-          RCUTILS_LOG_ERROR_THROTTLE(RCUTILS_STEADY_TIME,1, "Incorrect mapping of mesh handles");
+          RCUTILS_LOG_ERROR_THROTTLE(RCUTILS_STEADY_TIME, 1, "Incorrect mapping of mesh handles");
           return false;
         }
         else
@@ -314,12 +324,12 @@ bool OccupancyMapMonitor::getShapeTransformCache(std::size_t index, const std::s
 }
 
 bool OccupancyMapMonitor::saveMapCallback(std::shared_ptr<rmw_request_id_t> request_header,
-                     const std::shared_ptr<moveit_msgs::srv::SaveMap::Request> req,
-                     std::shared_ptr<moveit_msgs::srv::SaveMap::Response> res)
+                                          const std::shared_ptr<moveit_msgs::srv::SaveMap::Request> req,
+                                          std::shared_ptr<moveit_msgs::srv::SaveMap::Response> res)
 {
-  (void)request_header; // avoid warning
+  (void)request_header;  // avoid warning
 
-  RCLCPP_INFO(logger_occupancy_map_monitor,"Writing map to %s", req->filename.c_str());
+  RCLCPP_INFO(logger_occupancy_map_monitor, "Writing map to %s", req->filename.c_str());
   tree_->lockRead();
   try
   {
@@ -334,12 +344,12 @@ bool OccupancyMapMonitor::saveMapCallback(std::shared_ptr<rmw_request_id_t> requ
 }
 
 bool OccupancyMapMonitor::loadMapCallback(const std::shared_ptr<rmw_request_id_t> request_header,
-                        const std::shared_ptr<moveit_msgs::srv::LoadMap::Request> req,
-                        std::shared_ptr<moveit_msgs::srv::LoadMap::Response> res)
+                                          const std::shared_ptr<moveit_msgs::srv::LoadMap::Request> req,
+                                          std::shared_ptr<moveit_msgs::srv::LoadMap::Response> res)
 {
-  (void)request_header; // avoid warning
+  (void)request_header;  // avoid warning
 
-  RCLCPP_INFO(logger_occupancy_map_monitor,"Reading map from %s", req->filename.c_str());
+  RCLCPP_INFO(logger_occupancy_map_monitor, "Reading map from %s", req->filename.c_str());
 
   /* load the octree from disk */
   tree_->lockWrite();
@@ -349,7 +359,7 @@ bool OccupancyMapMonitor::loadMapCallback(const std::shared_ptr<rmw_request_id_t
   }
   catch (...)
   {
-    RCLCPP_ERROR(logger_occupancy_map_monitor,"Failed to load map from file");
+    RCLCPP_ERROR(logger_occupancy_map_monitor, "Failed to load map from file");
     res->success = false;
   }
   tree_->unlockWrite();

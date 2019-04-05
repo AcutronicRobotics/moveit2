@@ -63,7 +63,7 @@ public:
     }
     catch (pluginlib::PluginlibException& ex)
     {
-      RCLCPP_ERROR(LOGGER, "Exception while loading %s : %s",name.c_str(), ex.what());
+      RCLCPP_ERROR(LOGGER, "Exception while loading %s : %s", name.c_str(), ex.what());
     }
     return plugin;
   }
@@ -107,7 +107,8 @@ bool CollisionPluginLoader::activate(const std::string& name, const planning_sce
   return loader_->activate(name, scene, exclusive);
 }
 
-void CollisionPluginLoader::setupScene(std::shared_ptr<rclcpp::Node> node, const planning_scene::PlanningScenePtr& scene)
+void CollisionPluginLoader::setupScene(std::shared_ptr<rclcpp::Node> node,
+                                       const planning_scene::PlanningScenePtr& scene)
 {
   if (!scene)
     return;
@@ -116,14 +117,21 @@ void CollisionPluginLoader::setupScene(std::shared_ptr<rclcpp::Node> node, const
   std::string collision_detector_name;
   auto collision_pluggin_loader_parameters = std::make_shared<rclcpp::SyncParametersClient>(node);
 
-  for (auto & parameter : collision_pluggin_loader_parameters->get_parameters({"collision_detector","/move_group/collision_detector"})) {
-    if(parameter.get_type_name().compare("collision_detector")){
+  for (auto& parameter :
+       collision_pluggin_loader_parameters->get_parameters({ "collision_detector", "/move_group/collision_detector" }))
+  {
+    if (parameter.get_type_name().compare("collision_detector"))
+    {
       collision_detector_name = parameter.value_to_string();
-    }else if(parameter.get_type_name().compare("/move_group/collision_detector")){
+    }
+    else if (parameter.get_type_name().compare("/move_group/collision_detector"))
+    {
       // Check for existence in move_group namespace
       // mainly for rviz plugins to get same collision detector.
       collision_detector_name = parameter.value_to_string();
-    }else{
+    }
+    else
+    {
       // This is not a valid name for a collision detector plugin
       return;
     }
@@ -136,7 +144,7 @@ void CollisionPluginLoader::setupScene(std::shared_ptr<rclcpp::Node> node, const
   }
 
   activate(collision_detector_name, scene, true);
-  RCLCPP_INFO(LOGGER, "Using collision detector: %s" , scene->getActiveCollisionDetectorName().c_str());
+  RCLCPP_INFO(LOGGER, "Using collision detector: %s", scene->getActiveCollisionDetectorName().c_str());
 }
 
 }  // namespace collision_detection

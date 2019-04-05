@@ -514,8 +514,8 @@ struct ProximityInfo
 bool doBoundingSpheresIntersect(const PosedBodySphereDecompositionConstPtr& p1,
                                 const PosedBodySphereDecompositionConstPtr& p2);
 
-void getCollisionSphereMarkers(const std_msgs::msg::ColorRGBA& color, const std::string& frame_id, const std::string& ns,
-                               const rclcpp::Duration& dur,
+void getCollisionSphereMarkers(const std_msgs::msg::ColorRGBA& color, const std::string& frame_id,
+                               const std::string& ns, const rclcpp::Duration& dur,
                                const std::vector<PosedBodySphereDecompositionPtr>& posed_decompositions,
                                visualization_msgs::msg::MarkerArray& arr);
 

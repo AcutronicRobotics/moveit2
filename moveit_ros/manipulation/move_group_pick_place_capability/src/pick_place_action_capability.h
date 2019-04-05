@@ -62,11 +62,13 @@ private:
   void executePickupCallbackPlanAndExecute(const moveit_msgs::action::PickupGoalConstPtr& goal,
                                            moveit_msgs::action::PickupResult& action_res);
 
-  void executePlaceCallbackPlanOnly(const moveit_msgs::action::PlaceGoalConstPtr& goal, moveit_msgs::action::PlaceResult& action_res);
+  void executePlaceCallbackPlanOnly(const moveit_msgs::action::PlaceGoalConstPtr& goal,
+                                    moveit_msgs::action::PlaceResult& action_res);
   void executePlaceCallbackPlanAndExecute(const moveit_msgs::action::PlaceGoalConstPtr& goal,
                                           moveit_msgs::action::PlaceResult& action_res);
 
-  bool planUsingPickPlacePickup(const moveit_msgs::action::PickupGoal& goal, moveit_msgs::action::PickupResult* action_res,
+  bool planUsingPickPlacePickup(const moveit_msgs::action::PickupGoal& goal,
+                                moveit_msgs::action::PickupResult* action_res,
                                 plan_execution::ExecutableMotionPlan& plan);
   bool planUsingPickPlacePlace(const moveit_msgs::action::PlaceGoal& goal, moveit_msgs::action::PlaceResult* action_res,
                                plan_execution::ExecutableMotionPlan& plan);

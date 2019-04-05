@@ -70,7 +70,7 @@ urdf::ModelInterfaceSharedPtr loadModelInterface(const std::string& robot_name)
   if (urdf_model == nullptr)
   {
     RCLCPP_ERROR(LOGGER, "Cannot find URDF for %s. Make sure moveit_resources/your robot description is installed",
-                    robot_name.c_str());
+                 robot_name.c_str());
   }
   return urdf_model;
 }
@@ -127,8 +127,8 @@ void RobotModelBuilder::addChain(const std::string& section, const std::string& 
 
   if (not joint_origins.empty() && link_names.size() - 1 != joint_origins.size())
   {
-    RCLCPP_ERROR(LOGGER, "There should be one more link (%zu) than there are joint origins (%zu)",
-                    link_names.size(), joint_origins.size());
+    RCLCPP_ERROR(LOGGER, "There should be one more link (%zu) than there are joint origins (%zu)", link_names.size(),
+                 joint_origins.size());
     is_valid_ = false;
     return;
   }
@@ -192,8 +192,8 @@ void RobotModelBuilder::addChain(const std::string& section, const std::string& 
   }
 }
 
-void RobotModelBuilder::addInertial(const std::string& link_name, double mass, geometry_msgs::msg::Pose origin, double ixx,
-                                    double ixy, double ixz, double iyy, double iyz, double izz)
+void RobotModelBuilder::addInertial(const std::string& link_name, double mass, geometry_msgs::msg::Pose origin,
+                                    double ixx, double ixy, double ixz, double iyy, double iyz, double izz)
 {
   if (not urdf_model_->getLink(link_name))
   {
@@ -234,7 +234,7 @@ void RobotModelBuilder::addCollisionBox(const std::string& link_name, const std:
 {
   if (dims.size() != 3)
   {
-    RCLCPP_ERROR(LOGGER,"There can only be 3 dimensions of a box (given %zu!)");
+    RCLCPP_ERROR(LOGGER, "There can only be 3 dimensions of a box (given %zu!)");
     is_valid_ = false;
     return;
   }
