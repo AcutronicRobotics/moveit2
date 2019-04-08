@@ -984,7 +984,7 @@ static inline Eigen::Isometry3d urdfPose2Isometry3d(const urdf::Pose& pose)
   Eigen::Isometry3d af(Eigen::Translation3d(pose.position.x, pose.position.y, pose.position.z) * q);
   return af;
 }
-}
+}  // namespace
 
 LinkModel* RobotModel::constructLinkModel(const urdf::Link* urdf_link)
 {

@@ -50,7 +50,6 @@ find_package(std_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
 find_package(common_interfaces REQUIRED)
-# find_package(xmlrpcpp REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(pluginlib REQUIRED)
 

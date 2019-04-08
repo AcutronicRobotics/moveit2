@@ -21,9 +21,9 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <build_depend>moveit_ros_planning</build_depend>
-  <build_depend>moveit_ros_warehouse</build_depend>
-  <build_depend>moveit_ros_move_group</build_depend>
-  <build_depend>moveit_ros_manipulation</build_depend>
+  <!-- <build_depend>moveit_ros_warehouse</build_depend> TODO: uncomment when ported-->
+  <!-- <build_depend>moveit_ros_move_group</build_depend> TODO uncomment when ported -->
+  <!-- <build_depend>moveit_ros_manipulation</build_depend> TODO: uncomment when ported -->
   <build_depend>rclcpp</build_depend>
   <build_depend>rclpy</build_depend>
   <build_depend>geometry_msgs</build_depend>
@@ -34,9 +34,9 @@
   <build_depend>tf2_ros</build_depend>
 
   <exec_depend>moveit_ros_planning</exec_depend>
-  <exec_depend>moveit_ros_warehouse</exec_depend>
-  <exec_depend>moveit_ros_move_group</exec_depend>
-  <exec_depend>moveit_ros_manipulation</exec_depend>
+  <!-- <exec_depend>moveit_ros_warehouse</exec_depend> TODO: uncomment when ported-->
+  <!-- <exec_depend>moveit_ros_move_group</exec_depend> TODO uncomment when ported -->
+  <!-- <exec_depend>moveit_ros_manipulation</exec_depend> TODO: uncomment when ported -->
   <exec_depend>rclcpp</exec_depend>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>

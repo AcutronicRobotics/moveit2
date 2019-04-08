@@ -58,3 +58,4 @@ CATKIN_IGNORE
 .moveit_ci
 
 *.pyc
+.DS_Store
