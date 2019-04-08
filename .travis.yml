@@ -1,27 +1,49 @@
+# This config file for Travis CI utilizes https://github.com/ros-planning/moveit_ci/ package.
+sudo: required
+dist: trusty  # distro used by Travis, moveit_ci uses the docker image's distro
+services:
+  - docker
+language: cpp
+cache: ccache
+compiler: gcc
+
 notifications:
   email:
     recipients:
       - lander@erlerobotics.com
       - anasarrak@erlerobotics.com
 
+env:
+  global:
+    - MOVEIT_CI_TRAVIS_TIMEOUT=85  # Travis grants us 90 min, but we add a safety margin of 5 min
+    - ROS_DISTRO=crystal
+    - ROS_REPO=acutronicrobotics
+    - UPSTREAM_WORKSPACE=moveit.rosinstall
+    - TEST_BLACKLIST="moveit_ros_perception tf2_ros"  # mesh_filter_test fails due to broken Mesa OpenGL
+    - CXXFLAGS="-Wall -Wextra -Wwrite-strings -Wunreachable-code -Wpointer-arith -Wredundant-decls -Wno-unused-parameter -Wno-unused-but-set-parameter -Wno-unused-function"
+    #- WARNINGS_OK=false
+
 matrix:
-  include:
-    - os: linux
-      dist: bionic
-      services:
-        - docker
-      sudo:
-        - required
-    - os: osx
-      osx_image: xcode10.1
+  - ROS_DISTRO=crystal
+  # include:
+  #   - os: linux
+  #     dist: bionic
+  #     services:
+  #       - docker
+  #     sudo:
+  #       - required
+  #   - os: osx
+  #     osx_image: xcode10.1
 
 before_script:
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx-dependencies.sh; fi
-  - mkdir /tmp/moveit2
-  - mv * /tmp/moveit2
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd .docker/ci; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx-dependencies.sh; fi
+  # - mkdir /tmp/moveit2
+  # - mv * /tmp/moveit2
+  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd .docker/ci; fi
+  - git clone -q -b ros2 --depth=1 https://github.com/acutronicrobotics/moveit_ci.git .moveit_ci
 
 script:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker build -t acutronicrobotics/moveit2 .; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker run -v /tmp/moveit2:/root/ws_moveit/src/moveit2 acutronicrobotics/moveit2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash /tmp/moveit2/osx-compile.sh; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker build -t acutronicrobotics/moveit2 .; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then docker run -v /tmp/moveit2:/root/ws_moveit/src/moveit2 acutronicrobotics/moveit2; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash /tmp/moveit2/osx-compile.sh; fi
+  - .moveit_ci/travis.sh

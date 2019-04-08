@@ -54,8 +54,12 @@ repositories:
   image_common:
     type: git
     url: https://github.com/ros-perception/image_common
-    version: ros2
+    version: crystal
   angles:
     type: git
     url: https://github.com/ros/angles
     version: ros2
+  joint_state_publisher:
+    type: git
+    url: https://github.com/ros/joint_state_publisher
+    version: ros2-devel

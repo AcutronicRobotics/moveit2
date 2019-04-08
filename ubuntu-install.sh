@@ -109,7 +109,7 @@ function compileWS()
 	find $ROS_PATH -name tf2_eigen | xargs rm -rf
 	cd $WS
 	source $ROS_PATH/setup.bash
-	colcon build --merge-install --cmake-args -DBUILD_TESTING=False
+	colcon build --merge-install
 	result=$?
 	
 	if [ $result -eq 0 ]; then
