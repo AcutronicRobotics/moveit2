@@ -24,16 +24,16 @@ env:
     #- WARNINGS_OK=false
 
 matrix:
-  - ROS_DISTRO=crystal
   include:
+    - ROS_DISTRO=crystal
     - os: linux
       dist: bionic
       # services:
       #   - docker
       # sudo:
       #   - required
-    - os: osx
-      osx_image: xcode10.1
+    # - os: osx
+    #   osx_image: xcode10.1
 
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx-dependencies.sh; fi
