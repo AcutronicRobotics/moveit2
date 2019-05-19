@@ -11,6 +11,12 @@ ament_target_dependencies(${MOVEIT_LIB_NAME}
     ${moveit_msgs_LIBRARIES}
     pluginlib)
 
+target_link_libraries(${MOVEIT_LIB_NAME}
+  ${Boost_LIBRARIES}
+  ${rclcpp_LIBRARIES}
+  ${moveit_msgs_LIBRARIES}
+  octomap)
+
 # add_executable(moveit_occupancy_map_server src/occupancy_map_server.cpp)
 # ament_target_dependencies(moveit_occupancy_map_server
 #     ${MOVEIT_LIB_NAME}
