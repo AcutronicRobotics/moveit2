@@ -8,6 +8,7 @@ ament_target_dependencies(${MOVEIT_LIB_NAME}
   rclcpp
   random_numbers
   pluginlib
+  moveit_core
 )
 
 target_include_directories(${MOVEIT_LIB_NAME} PUBLIC

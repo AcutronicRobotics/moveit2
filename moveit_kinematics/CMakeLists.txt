@@ -16,12 +16,6 @@ find_package(pluginlib REQUIRED)
 find_package(moveit_core REQUIRED)
 find_package(moveit_ros_planning REQUIRED)
 
-message("class_loader_LIBRARIES " ${class_loader_LIBRARIES})
-message("class_loader_INCLUDE_DIRS " ${class_loader_INCLUDE_DIRS})
-message("pluginlib_LIBRARIES " ${pluginlib_LIBRARIES})
-message("pluginlib_INCLUDE_DIRS " ${pluginlib_INCLUDE_DIRS})
-message(" ")
-
 set(THIS_PACKAGE_INCLUDE_DIRS
     kdl_kinematics_plugin/include
     # lma_kinematics_plugin/include
