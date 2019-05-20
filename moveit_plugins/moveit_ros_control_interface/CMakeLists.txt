@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(moveit_ros_control_interface)
 
 add_compile_options(-std=c++14)
@@ -17,14 +17,14 @@ if("${controller_manager_msgs_VERSION}" VERSION_LESS "0.10.0")
   add_definitions(-DMOVEIT_ROS_CONTROL_INTERFACE_OLD_ROS_CONTROL)
 endif()
 
-include_directories(include ${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
+include_directories(include ${Boost_INCLUDE_DIRS} ${rclcpp_INCLUDE_DIRS})
 
 add_library(${PROJECT_NAME}_plugin
   src/controller_manager_plugin.cpp
 )
 set_target_properties(${PROJECT_NAME}_plugin PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
 target_link_libraries(${PROJECT_NAME}_plugin
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES}
+  ${rclcpp_LIBRARIES} ${Boost_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_trajectory_plugin
@@ -32,7 +32,7 @@ add_library(${PROJECT_NAME}_trajectory_plugin
 )
 set_target_properties(${PROJECT_NAME}_trajectory_plugin PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
 target_link_libraries(${PROJECT_NAME}_trajectory_plugin
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES}
+  ${rclcpp_LIBRARIES} ${Boost_LIBRARIES}
 )
 
 
@@ -52,17 +52,17 @@ target_link_libraries(${PROJECT_NAME}_trajectory_plugin
 
 ## Mark executables and/or libraries for installation
 install(TARGETS ${PROJECT_NAME}_plugin ${PROJECT_NAME}_trajectory_plugin
-ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ARCHIVE DESTINATION lib
+LIBRARY DESTINATION lib
+RUNTIME DESTINATION lib/${PROJECT_NAME}
 )
 
 ## Mark cpp header files for installation
 install(DIRECTORY include/${PROJECT_NAME}/
-  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+  DESTINATION include/${PROJECT_NAME}
 )
 install(FILES moveit_core_plugins.xml moveit_ros_control_interface_plugins.xml
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
