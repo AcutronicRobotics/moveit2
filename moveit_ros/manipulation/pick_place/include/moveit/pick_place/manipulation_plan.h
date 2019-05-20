@@ -41,11 +41,11 @@
 #include <moveit/robot_state/robot_state.h>
 #include <moveit/constraint_samplers/constraint_sampler.h>
 #include <moveit/plan_execution/plan_representation.h>
-#include <moveit_msgs/GripperTranslation.h>
-#include <moveit_msgs/RobotState.h>
-#include <moveit_msgs/RobotTrajectory.h>
-#include <moveit_msgs/MoveItErrorCodes.h>
-#include <moveit_msgs/Constraints.h>
+#include <moveit_msgs/msg/gripper_translation.hpp>
+#include <moveit_msgs/msg/robot_state.hpp>
+#include <moveit_msgs/msg/robot_trajectory.hpp>
+#include <moveit_msgs/msg/move_it_error_codes.hpp>
+#include <moveit_msgs/msg/constraints.hpp>
 #include <string>
 #include <vector>
 
@@ -78,7 +78,7 @@ struct ManipulationPlanSharedData
 
   moveit_msgs::msg::AttachedCollisionObject diff_attached_object_;
 
-  ros::WallTime timeout_;
+  std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double>> timeout_;
 };
 
 MOVEIT_STRUCT_FORWARD(ManipulationPlan);
@@ -112,13 +112,13 @@ struct ManipulationPlan
   moveit_msgs::msg::GripperTranslation retreat_;
 
   // the kinematic configuration of the end effector when approaching the goal (an open gripper)
-  trajectory_msgs::JointTrajectory approach_posture_;
+  trajectory_msgs::msg::JointTrajectory approach_posture_;
 
   // the kinematic configuration of the end effector when retreating from the goal (a closed gripper)
-  trajectory_msgs::JointTrajectory retreat_posture_;
+  trajectory_msgs::msg::JointTrajectory retreat_posture_;
 
   // -------------- computed data --------------------------
-  geometry_msgs::PoseStamped goal_pose_;
+  geometry_msgs::msg::PoseStamped goal_pose_;
   Eigen::Isometry3d transformed_goal_pose_;
 
   moveit_msgs::msg::Constraints goal_constraints_;
