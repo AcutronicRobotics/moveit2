@@ -121,7 +121,7 @@ public:
   // the amount of time (maximum) to wait for achieving a grasp posture
   static const double DEFAULT_GRASP_POSTURE_COMPLETION_DURATION;  // seconds
 
-  PickPlace(const planning_pipeline::PlanningPipelinePtr& planning_pipeline);
+  PickPlace(const planning_pipeline::PlanningPipelinePtr& planning_pipeline, const rclcpp::Node::SharedPtr& node);
 
   const constraint_samplers::ConstraintSamplerManagerPtr& getConstraintsSamplerManager() const
   {
@@ -156,6 +156,7 @@ public:
   void visualizeGrasps(const std::vector<ManipulationPlanPtr>& plans) const;
 
 private:
+  rclcpp::Node::SharedPtr node_;
   planning_pipeline::PlanningPipelinePtr planning_pipeline_;
   bool display_computed_motion_plans_;
   bool display_grasps_;
