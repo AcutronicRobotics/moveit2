@@ -61,8 +61,8 @@ bool PlanStage::evaluate(const ManipulationPlanPtr& plan) const
   planning_interface::MotionPlanResponse res;
   req.group_name = plan->shared_data_->planning_group_->getName();
   req.num_planning_attempts = 1;
-  long time_out_sec = std::chrono::duration_cast<std::chrono::nanoseconds>(plan->shared_data_->timeout_ - std::chrono::system_clock::now()).count();
-  req.allowed_planning_time = (double)time_out_sec * 1.0e-9;
+  long time_out_nsec = std::chrono::duration_cast<std::chrono::nanoseconds>(plan->shared_data_->timeout_ - std::chrono::system_clock::now()).count();
+  req.allowed_planning_time = (double)time_out_nsec * 1.0e-9;
   req.path_constraints = plan->shared_data_->path_constraints_;
   req.planner_id = plan->shared_data_->planner_id_;
   req.start_state.is_diff = true;
