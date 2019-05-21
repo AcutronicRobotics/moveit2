@@ -206,6 +206,12 @@ Follow [this](https://discourse.ros.org/t/ros-2-dashing-diademata-call-for-testi
 ```
 sudo apt-get purge ros-dashing-tf2*
 ```
+
+Install additional dependencies
+```bash
+sudo apt-get install python-vcstool python3-colcon-*
+```
+
 ##### Compile moveit2 and dependencies:
 
 ```bash
