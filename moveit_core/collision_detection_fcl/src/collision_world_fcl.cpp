@@ -56,7 +56,7 @@ rclcpp::Logger LOGGER_COLLISION_WORLD = rclcpp::get_logger("collision_world.fcl"
 
 namespace collision_detection
 {
-const std::string CollisionDetectorAllocatorFCL::NAME("FCL");
+const std::string CollisionDetectorAllocatorFCL::NAME_("FCL");
 
 CollisionWorldFCL::CollisionWorldFCL() : CollisionWorld()
 {
