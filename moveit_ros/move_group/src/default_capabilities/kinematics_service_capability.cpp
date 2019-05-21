@@ -90,9 +90,9 @@ void move_group::MoveGroupKinematicsService::computeIK(
         bool result_ik = false;
         double timeout = ((double)req.timeout.sec) + ((double)RCUTILS_NS_TO_S(req.timeout.nanosec));
         if (ik_link.empty())
-          result_ik = rs.setFromIK(jmg, req_pose.pose, 5, timeout, constraint);
+          result_ik = rs.setFromIK(jmg, req_pose.pose, timeout, constraint);
         else
-          result_ik = rs.setFromIK(jmg, req_pose.pose, ik_link, 5, timeout, constraint);
+          result_ik = rs.setFromIK(jmg, req_pose.pose, ik_link, timeout, constraint);
 
         if (result_ik)
         {
@@ -128,7 +128,7 @@ void move_group::MoveGroupKinematicsService::computeIK(
         if (ok)
         {
           double timeout = ((double)req.timeout.sec) + ((double)RCUTILS_NS_TO_S(req.timeout.nanosec));
-          if (rs.setFromIK(jmg, req_poses, req.ik_link_names, 5, timeout, constraint))
+          if (rs.setFromIK(jmg, req_poses, req.ik_link_names, timeout, constraint))
           {
             robot_state::robotStateToRobotStateMsg(rs, solution, false);
             error_code.val = moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
