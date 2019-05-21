@@ -32,7 +32,7 @@ include_directories(SYSTEM
                     ${EIGEN3_INCLUDE_DIRS})
 
 add_subdirectory(pick_place)
-# add_subdirectory(move_group_pick_place_capability)
+add_subdirectory(move_group_pick_place_capability)
 
 install(FILES
   pick_place_capability_plugin_description.xml
