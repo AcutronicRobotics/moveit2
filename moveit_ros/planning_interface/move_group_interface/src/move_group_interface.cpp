@@ -463,10 +463,9 @@ public:
       kinematics::KinematicsQueryOptions o;
       o.return_approximate_solution = approx;
 
-      //TODO (ahcorde) Review 0 in  eef_pose, eef, 0,  0.0,
       // if no frame transforms are needed, call IK directly
       if (frame.empty() || moveit::core::Transforms::sameFrame(frame, getRobotModel()->getModelFrame()))
-        return getJointStateTarget().setFromIK(getJointModelGroup(), eef_pose, eef, 0,  0.0,
+        return getJointStateTarget().setFromIK(getJointModelGroup(), eef_pose, eef, 0,
                                                moveit::core::GroupStateValidityCallbackFn(), o);
       else
       {
@@ -476,7 +475,7 @@ public:
           const Eigen::Isometry3d& t = getJointStateTarget().getFrameTransform(frame);
           Eigen::Isometry3d p;
           tf2::fromMsg(eef_pose, p);
-          return getJointStateTarget().setFromIK(getJointModelGroup(), t * p, eef, 0, 0.0,
+          return getJointStateTarget().setFromIK(getJointModelGroup(), t * p, eef, 0,
                                                  moveit::core::GroupStateValidityCallbackFn(), o);
         }
         else
@@ -998,16 +997,16 @@ public:
     // }
 
     bool is_result_ready = false;
-    rclcpp_action::ClientGoalHandle<moveit_msgs::action::MoveGroup>::WrappedResult result_tmp;
-    auto send_goal_options = rclcpp_action::Client<moveit_msgs::action::MoveGroup>::SendGoalOptions();
+    rclcpp_action::ClientGoalHandle<moveit_msgs::action::ExecuteTrajectory>::WrappedResult result_tmp;
+    auto send_goal_options = rclcpp_action::Client<moveit_msgs::action::ExecuteTrajectory>::SendGoalOptions();
     send_goal_options.result_callback =
-      [&is_result_ready, &result_tmp](const rclcpp_action::ClientGoalHandle<moveit_msgs::action::MoveGroup>::WrappedResult & result) mutable
+      [&is_result_ready, &result_tmp](const rclcpp_action::ClientGoalHandle<moveit_msgs::action::ExecuteTrajectory>::WrappedResult & result) mutable
       {
         result_tmp = result;
         is_result_ready = true;
       };
 
-    auto goal_handle_future = execute_action_client_->async_send_goal(goal);
+    auto goal_handle_future = execute_action_client_->async_send_goal(goal, send_goal_options);
     if (rclcpp::spin_until_future_complete(node_, goal_handle_future) !=
     rclcpp::executor::FutureReturnCode::SUCCESS)
     {
