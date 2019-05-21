@@ -38,10 +38,10 @@
 #define MOVEIT_MOVE_GROUP_PICK_PLACE_ACTION_CAPABILITY_
 
 #include <moveit/move_group/move_group_capability.h>
-#include <actionlib/server/simple_action_server.h>
+#include "rclcpp_action/rclcpp_action.hpp"
 #include <moveit/pick_place/pick_place.h>
-#include <moveit_msgs/PickupAction.h>
-#include <moveit_msgs/PlaceAction.h>
+#include <moveit_msgs/action/pickup.hpp>
+#include <moveit_msgs/action/place.hpp>
 
 #include <memory>
 
@@ -54,21 +54,21 @@ public:
   void initialize() override;
 
 private:
-  void executePickupCallback(const moveit_msgs::action::PickupGoalConstPtr& goal);
-  void executePlaceCallback(const moveit_msgs::action::PlaceGoalConstPtr& goal);
+  void executePickupCallback(const std::shared_ptr<const moveit_msgs::action::Pickup::Goal>& goal);
+  void executePlaceCallback(const std::shared_ptr<const moveit_msgs::action::Place::Goal>& goal);
 
-  void executePickupCallbackPlanOnly(const moveit_msgs::action::PickupGoalConstPtr& goal,
-                                     moveit_msgs::action::PickupResult& action_res);
-  void executePickupCallbackPlanAndExecute(const moveit_msgs::action::PickupGoalConstPtr& goal,
-                                           moveit_msgs::action::PickupResult& action_res);
+  void executePickupCallbackPlanOnly(const std::shared_ptr<const moveit_msgs::action::Pickup::Goal>& goal,
+                                     moveit_msgs::action::Pickup::Result& action_res);
+  void executePickupCallbackPlanAndExecute(const std::shared_ptr<const moveit_msgs::action::Pickup::Goal>& goal,
+                                           moveit_msgs::action::Pickup::Result& action_res);
 
-  void executePlaceCallbackPlanOnly(const moveit_msgs::action::PlaceGoalConstPtr& goal, moveit_msgs::action::PlaceResult& action_res);
-  void executePlaceCallbackPlanAndExecute(const moveit_msgs::action::PlaceGoalConstPtr& goal,
-                                          moveit_msgs::action::PlaceResult& action_res);
+  void executePlaceCallbackPlanOnly(const std::shared_ptr<const moveit_msgs::action::Place::Goal>& goal, moveit_msgs::action::Place::Result& action_res);
+  void executePlaceCallbackPlanAndExecute(const std::shared_ptr<const moveit_msgs::action::Place::Goal>& goal,
+                                          moveit_msgs::action::Place::Result& action_res);
 
-  bool planUsingPickPlacePickup(const moveit_msgs::action::PickupGoal& goal, moveit_msgs::action::PickupResult* action_res,
+  bool planUsingPickPlacePickup(const moveit_msgs::action::Pickup::Goal& goal, moveit_msgs::action::Pickup::Result* action_res,
                                 plan_execution::ExecutableMotionPlan& plan);
-  bool planUsingPickPlacePlace(const moveit_msgs::action::PlaceGoal& goal, moveit_msgs::action::PlaceResult* action_res,
+  bool planUsingPickPlacePlace(const moveit_msgs::action::Place::Goal& goal, moveit_msgs::action::Place::Result* action_res,
                                plan_execution::ExecutableMotionPlan& plan);
 
   void preemptPickupCallback();
@@ -83,22 +83,22 @@ private:
   void setPickupState(MoveGroupState state);
   void setPlaceState(MoveGroupState state);
 
-  void fillGrasps(moveit_msgs::action::PickupGoal& goal);
+  void fillGrasps(moveit_msgs::action::Pickup::Goal& goal);
 
-  pick_place::PickPlacePtr pick_place_;
+  std::shared_ptr<pick_place::PickPlace> pick_place_;
 
-  std::unique_ptr<actionlib::SimpleActionServer<moveit_msgs::action::PickupAction> > pickup_action_server_;
+  std::shared_ptr<rclcpp_action::Server<moveit_msgs::action::Pickup>> pickup_action_server_;
   moveit_msgs::action::PickupFeedback pickup_feedback_;
 
-  std::unique_ptr<actionlib::SimpleActionServer<moveit_msgs::action::PlaceAction> > place_action_server_;
-  moveit_msgs::action::PlaceFeedback place_feedback_;
+  std::unique_ptr<rclcpp_action::Server<moveit_msgs::action::Place> > place_action_server_;
+  moveit_msgs::action::Place::Feedback place_feedback_;
 
   std::unique_ptr<moveit_msgs::msg::AttachedCollisionObject> diff_attached_object_;
 
   MoveGroupState pickup_state_;
   MoveGroupState place_state_;
 
-  ros::ServiceClient grasp_planning_service_;
+  rclcpp::Client<moveit_msgs::srv::GraspPlanning>::SharedPtr grasp_planning_service_;
 };
 }
 
