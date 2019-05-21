@@ -46,8 +46,6 @@ static void noDeleter(const moveit::core::RobotModel* /*unused*/)
 {
 }
 
-rclcpp::Logger LOGGER_KINMATICS_BASE = rclcpp::get_logger("kinematics_base");
-
 void KinematicsBase::storeValues(const moveit::core::RobotModel& robot_model, const std::string& group_name,
                                  const std::string& base_frame, const std::vector<std::string>& tip_frames,
                                  double search_discretization)
@@ -112,7 +110,7 @@ bool KinematicsBase::initialize(const std::string& robot_description, const std:
     return initialize(robot_description, group_name, base_frame, tip_frames[0], search_discretization);
   }
 
-  RCLCPP_ERROR(LOGGER_KINMATICS_BASE, "This solver does not support multiple tip frames");
+  RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "This solver does not support multiple tip frames");
   return false;
 }
 
@@ -120,7 +118,10 @@ bool KinematicsBase::initialize(const moveit::core::RobotModel& robot_model, con
                                 const std::string& base_frame, const std::vector<std::string>& tip_frames,
                                 double search_discretization)
 {
-  RCLCPP_WARN(LOGGER_KINMATICS_BASE, "IK plugin for group '%s' relies on deprecated API. Please implement initialize(RobotModel, ...).", group_name.c_str());
+  RCLCPP_WARN(LOGGER_KINEMATICS_BASE,
+                 "IK plugin for group '%s' relies on deprecated API. "
+                 "Please implement initialize(RobotModel, ...).",
+                 group_name.c_str());
   return false;
 }
 
@@ -203,14 +204,14 @@ bool KinematicsBase::getPositionIK(const std::vector<geometry_msgs::msg::Pose>& 
 
   if (ik_poses.size() != 1)
   {
-    // RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "This kinematic solver does not support getPositionIK for multiple tips");
+    RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "This kinematic solver does not support getPositionIK for multiple tips");
     result.kinematic_error = KinematicErrors::MULTIPLE_TIPS_NOT_SUPPORTED;
     return false;
   }
 
   if (ik_poses.empty())
   {
-    // RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "Input ik_poses array is empty");
+    RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "Input ik_poses array is empty");
     result.kinematic_error = KinematicErrors::EMPTY_TIP_POSES;
     return false;
   }

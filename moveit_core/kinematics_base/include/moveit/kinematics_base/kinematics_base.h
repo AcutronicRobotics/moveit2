@@ -59,7 +59,7 @@ MOVEIT_CLASS_FORWARD(RobotModel)
 namespace kinematics
 {
 // Logger
-// rclcpp::Logger LOGGER_KINEMATICS_BASE = rclcpp::get_logger("kinematics_base");
+static rclcpp::Logger LOGGER_KINEMATICS_BASE = rclcpp::get_logger("kinematics_base");
 
 /*
  * @enum DiscretizationMethods
@@ -314,7 +314,7 @@ public:
     }
 
     // Otherwise throw error because this function should have been implemented
-    // RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "This kinematic solver does not support searchPositionIK with multiple poses");
+    RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "This kinematic solver does not support searchPositionIK with multiple poses");
     return false;
   }
 
@@ -437,9 +437,9 @@ public:
    */
   virtual const std::string& getTipFrame() const
   {
-    // if (tip_frames_.size() > 1)
-    //   RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "This kinematic solver has more than one tip frame, "
-    //                                      "do not call getTipFrame()");
+    if (tip_frames_.size() > 1)
+      RCLCPP_ERROR(LOGGER_KINEMATICS_BASE, "This kinematic solver has more than one tip frame, "
+                           "do not call getTipFrame()");
 
     return tip_frames_[0];
   }
@@ -599,8 +599,6 @@ protected:
   std::map<int, double> redundant_joint_discretization_;
   std::vector<DiscretizationMethod> supported_methods_;
 
-  std::shared_ptr<rclcpp::Node> node_;
-
   /**
    * @brief Enables kinematics plugins access to parameters that are defined
    * for the private namespace and inside 'robot_description_kinematics'.
@@ -617,51 +615,52 @@ protected:
   template <typename T>
   inline bool lookupParam(std::shared_ptr<rclcpp::Node>& node, const std::string& param, T& val, const T& default_val) const
   {
-    // rclcpp::SyncParametersClient parameters_lookup(node);
-    // std::vector<rclcpp::Parameter> groupname_param = parameters_lookup.get_parameters({ group_name_ + "/" + param });
-    //
-    // for (auto& parameter : groupname_param)
-    // {
-    //   if (!parameter.get_name().compare(group_name_ + "/" + param))
-    //   {
-    //     val = parameter.value_to_string();
-    //     return true;
-    //   }
-    // }
-    //
-    // auto only_param = parameters_lookup.get_parameters({ param });
-    // for (auto& parameter : only_param)
-    // {
-    //   if (!parameter.get_name().compare(param))
-    //   {
-    //     val = parameter.value_to_string();
-    //     return true;
-    //   }
-    // }
-    //
-    // auto robot_description_groupname_kinematics_param =
-    //     parameters_lookup.get_parameters({ "robot_description_kinematics/" + group_name_ + "/" + param });
-    //
-    // for (auto& parameter : robot_description_groupname_kinematics_param)
-    // {
-    //   if (!parameter.get_name().compare("robot_description_kinematics/" + group_name_ + "/" + param))
-    //   {
-    //     val = parameter.value_to_string();
-    //     return true;
-    //   }
-    // }
-    //
-    // auto robot_description_kinematics_param =
-    //     parameters_lookup.get_parameters({ "robot_description_kinematics/" + param });
-    //
-    // for (auto& parameter : robot_description_kinematics_param)
-    // {
-    //   if (!parameter.get_name().compare("robot_description_kinematics/" + param))
-    //   {
-    //     val = parameter.value_to_string();
-    //     return true;
-    //   }
-    // }
+    // TODO (ahcorde):
+    rclcpp::SyncParametersClient parameters_lookup(node);
+    std::vector<rclcpp::Parameter> groupname_param = parameters_lookup.get_parameters({ group_name_ + "/" + param });
+
+    for (auto& parameter : groupname_param)
+    {
+      if (!parameter.get_name().compare(group_name_ + "/" + param))
+      {
+        val = parameter.value_to_string();
+        return true;
+      }
+    }
+
+    auto only_param = parameters_lookup.get_parameters({ param });
+    for (auto& parameter : only_param)
+    {
+      if (!parameter.get_name().compare(param))
+      {
+        val = parameter.value_to_string();
+        return true;
+      }
+    }
+
+    auto robot_description_groupname_kinematics_param =
+        parameters_lookup.get_parameters({ "robot_description_kinematics/" + group_name_ + "/" + param });
+
+    for (auto& parameter : robot_description_groupname_kinematics_param)
+    {
+      if (!parameter.get_name().compare("robot_description_kinematics/" + group_name_ + "/" + param))
+      {
+        val = parameter.value_to_string();
+        return true;
+      }
+    }
+
+    auto robot_description_kinematics_param =
+        parameters_lookup.get_parameters({ "robot_description_kinematics/" + param });
+
+    for (auto& parameter : robot_description_kinematics_param)
+    {
+      if (!parameter.get_name().compare("robot_description_kinematics/" + param))
+      {
+        val = parameter.value_to_string();
+        return true;
+      }
+    }
     return false;
   }
 
