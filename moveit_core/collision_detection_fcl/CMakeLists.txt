@@ -1,5 +1,11 @@
 set(MOVEIT_LIB_NAME moveit_collision_detection_fcl)
 
+if(WIN32)
+  # set(append_library_dirs "$<TARGET_FILE_DIR:${PROJECT_NAME}>;$<TARGET_FILE_DIR:${PROJECT_NAME}_TestPlugins1>")
+else()
+  set(append_library_dirs "${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_BINARY_DIR}/../collision_detection;${CMAKE_CURRENT_BINARY_DIR}/../robot_state;${CMAKE_CURRENT_BINARY_DIR}/../robot_model;${CMAKE_CURRENT_BINARY_DIR}/../utils")
+endif()
+
 add_library(${MOVEIT_LIB_NAME} SHARED
   src/collision_common.cpp
   src/collision_robot_fcl.cpp
@@ -19,6 +25,8 @@ ament_target_dependencies(${MOVEIT_LIB_NAME}
 
 target_link_libraries(${MOVEIT_LIB_NAME}
 	moveit_collision_detection
+  moveit_robot_model
+  moveit_robot_state
 )
 
 add_library(collision_detector_fcl_plugin SHARED src/collision_detector_fcl_plugin_loader.cpp)
@@ -29,8 +37,14 @@ ament_target_dependencies(collision_detector_fcl_plugin
   visualization_msgs
   pluginlib
   rmw_implementation
-  ${MOVEIT_LIB_NAME})
+  ${MOVEIT_LIB_NAME}  
+)
 
+target_link_libraries(collision_detector_fcl_plugin
+  moveit_collision_detection
+  moveit_collision_detection_fcl
+  moveit_planning_scene
+)
 
 install(TARGETS ${MOVEIT_LIB_NAME} collision_detector_fcl_plugin
           LIBRARY DESTINATION lib
@@ -41,12 +55,6 @@ if(BUILD_TESTING)
   find_package(moveit_resources REQUIRED)
   include_directories(${moveit_resources_INCLUDE_DIRS})
 	find_package(resource_retriever REQUIRED)
-
-	if(WIN32)
-		# set(append_library_dirs "$<TARGET_FILE_DIR:${PROJECT_NAME}>;$<TARGET_FILE_DIR:${PROJECT_NAME}_TestPlugins1>")
-	else()
-		set(append_library_dirs "${CMAKE_CURRENT_BINARY_DIR};${CMAKE_CURRENT_BINARY_DIR}/../collision_detection;${CMAKE_CURRENT_BINARY_DIR}/../robot_state;${CMAKE_CURRENT_BINARY_DIR}/../robot_model;${CMAKE_CURRENT_BINARY_DIR}/../utils")
-	endif()
 
   ament_add_gtest(test_fcl_collision_detection test/test_fcl_collision_detection.cpp
 		APPEND_LIBRARY_DIRS "${append_library_dirs}")

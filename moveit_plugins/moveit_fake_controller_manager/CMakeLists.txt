@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(moveit_fake_controller_manager)
 
 add_compile_options(-std=c++14)
@@ -8,31 +8,36 @@ if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
 endif()
 
 find_package(Boost REQUIRED thread)
-find_package(catkin COMPONENTS
+find_package(ament_cmake REQUIRED)
+find_package(moveit_core REQUIRED)
+find_package(moveit_ros_planning REQUIRED)
+find_package(pluginlib REQUIRED)
+find_package(rclcpp REQUIRED)
+
+include_directories(include)
+
+include_directories(${Boost_INCLUDE_DIRS} ${rclcpp_INCLUDE_DIRS} ${moveit_ros_planning_INCLUDE_DIRS})
+
+add_library(${PROJECT_NAME} SHARED
+   src/moveit_fake_controller_manager.cpp
+   src/moveit_fake_controllers.cpp
+ )
+
+ament_target_dependencies(${PROJECT_NAME}
+  rclcpp
+  Boost
   moveit_core
   moveit_ros_planning
-  pluginlib
-  roscpp
-  REQUIRED)
-
-include_directories(${Boost_INCLUDE_DIRS} ${catkin_INCLUDE_DIRS})
-
-catkin_package(
-  LIBRARIES
-  INCLUDE_DIRS
-  CATKIN_DEPENDS
-    moveit_core
-    moveit_ros_planning
 )
 
-add_library(${PROJECT_NAME}
-   src/moveit_fake_controller_manager.cpp
-   src/moveit_fake_controllers.cpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
-target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${rclcpp_LIBRARIES} ${Boost_LIBRARIES})
 
-install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+pluginlib_export_plugin_description_file(moveit_core moveit_fake_controller_manager_plugin_description.xml)
 
-install(FILES moveit_fake_controller_manager_plugin_description.xml
-        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
-       )
+install(TARGETS ${PROJECT_NAME} LIBRARY DESTINATION lib)
+
+ament_export_include_directories(include)
+ament_export_dependencies(moveit_core)
+ament_export_dependencies(moveit_ros_planning)
+ament_package()

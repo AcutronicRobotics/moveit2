@@ -61,7 +61,7 @@ public:
     return true;
   }
 
-  bool waitForExecution(const rclcpp::Duration& timeout = rclcpp::Duration(0)) override
+  bool waitForExecution(const rclcpp::Duration& timeout = rclcpp::Duration(0.0)) override
   {
     return false;
   }

@@ -29,6 +29,7 @@ target_link_libraries(${MOVEIT_LIB_NAME}
 		${moveit_exceptions_LIBRARIES}
 		moveit_profiler
 		moveit_exceptions
+    ${geometric_shapes_LIBRARIES}
 )
 
 ament_export_libraries(${MOVEIT_LIB_NAME})

@@ -65,5 +65,13 @@ repositories:
     version: ros2
   control_msgs:
     type: git
-    url: https://github.com/erlerobot/control_msgs
-    version: crystal
+    url: https://github.com/ros-controls/control_msgs
+    version: crystal-devel
+  mara_ros2_control:
+    type: git
+    url: https://github.com/AcutronicRobotics/mara_ros2_control
+    version: master
+  mara_moveit_tutorials:
+    type: git
+    url: https://github.com/AcutronicRobotics/mara_moveit_tutorials
+    version: dashing

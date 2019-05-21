@@ -26,6 +26,7 @@
   <depend>tf2</depend>
   <depend>tf2_kdl</depend>
   <depend>orocos_kdl</depend>
+  <depend>moveit_msgs</depend>
 
   <exec_depend>python-lxml</exec_depend>
 

@@ -37,9 +37,9 @@
 
 #include <moveit/macros/class_forward.h>
 #include <moveit/controller_manager/controller_manager.h>
-#include <ros/publisher.h>
-#include <ros/rate.h>
+#include "rclcpp/rclcpp.hpp"
 #include <boost/thread/thread.hpp>
+#include <sensor_msgs/msg/joint_state.hpp>
 
 #ifndef MOVEIT_FAKE_CONTROLLERS
 #define MOVEIT_FAKE_CONTROLLERS
@@ -52,36 +52,36 @@ MOVEIT_CLASS_FORWARD(BaseFakeController);
 class BaseFakeController : public moveit_controller_manager::MoveItControllerHandle
 {
 public:
-  BaseFakeController(const std::string& name, const std::vector<std::string>& joints, const ros::Publisher& pub);
+  BaseFakeController(const std::string& name, const std::vector<std::string>& joints, const rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr& pub);
 
   moveit_controller_manager::ExecutionStatus getLastExecutionStatus() override;
   void getJoints(std::vector<std::string>& joints) const;
 
 protected:
   std::vector<std::string> joints_;
-  const ros::Publisher& pub_;
+  const rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr& pub_;
 };
 
 class LastPointController : public BaseFakeController
 {
 public:
-  LastPointController(const std::string& name, const std::vector<std::string>& joints, const ros::Publisher& pub);
+  LastPointController(const std::string& name, const std::vector<std::string>& joints, const rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr& pub);
   ~LastPointController() override;
 
   bool sendTrajectory(const moveit_msgs::msg::RobotTrajectory& t) override;
   bool cancelExecution() override;
-  bool waitForExecution(const ros::Duration&) override;
+  bool waitForExecution(const rclcpp::Duration&) override;
 };
 
 class ThreadedController : public BaseFakeController
 {
 public:
-  ThreadedController(const std::string& name, const std::vector<std::string>& joints, const ros::Publisher& pub);
+  ThreadedController(const std::string& name, const std::vector<std::string>& joints, const rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr& pub);
   ~ThreadedController() override;
 
   bool sendTrajectory(const moveit_msgs::msg::RobotTrajectory& t) override;
   bool cancelExecution() override;
-  bool waitForExecution(const ros::Duration&) override;
+  bool waitForExecution(const rclcpp::Duration&) override;
   moveit_controller_manager::ExecutionStatus getLastExecutionStatus() override;
 
 protected:
@@ -103,7 +103,7 @@ private:
 class ViaPointController : public ThreadedController
 {
 public:
-  ViaPointController(const std::string& name, const std::vector<std::string>& joints, const ros::Publisher& pub);
+  ViaPointController(const std::string& name, const std::vector<std::string>& joints, const rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr& pub);
   ~ViaPointController() override;
 
 protected:
@@ -113,14 +113,16 @@ protected:
 class InterpolatingController : public ThreadedController
 {
 public:
-  InterpolatingController(const std::string& name, const std::vector<std::string>& joints, const ros::Publisher& pub);
+  InterpolatingController(const std::string& name, const std::vector<std::string>& joints, const rclcpp::Publisher<sensor_msgs::msg::JointState>::SharedPtr& pub,
+                          const rclcpp::Node::SharedPtr& node_);
   ~InterpolatingController() override;
 
 protected:
   void execTrajectory(const moveit_msgs::msg::RobotTrajectory& t) override;
 
 private:
-  ros::WallRate rate_;
+  rclcpp::WallRate rate_;
+  rclcpp::Node::SharedPtr node_;
 };
 }
 
