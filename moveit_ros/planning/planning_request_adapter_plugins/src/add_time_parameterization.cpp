@@ -46,7 +46,9 @@ public:
   AddTimeParameterization() : planning_request_adapter::PlanningRequestAdapter()
   {
   }
-
+  void initialize()
+  {
+  }
   std::string getDescription() const override
   {
     return "Add Time Parameterization";
