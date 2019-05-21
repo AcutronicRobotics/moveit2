@@ -10,10 +10,10 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     urdf = os.path.join(get_package_share_directory('mara_description'), 'urdf', 'mara_robot_gripper_140.urdf')
+    srdf = "/home/erle/ros_mara_ws/src/MARA_ROS1/mara_moveit_config/config/mara.srdf"
     print(urdf)
     ld = LaunchDescription([
-        Node(package='robot_state_publisher', node_executable='robot_state_publisher', output='screen', arguments=[urdf], parameters=["/home/erle/moveit_ws/params.yaml"]),
-        # Node(package='moveit_ros_planning', node_executable='test_controller_manager', output='screen')
-        Node(package='moveit_ros_planning', node_executable='test_publish_dummy_joint_states', output='screen')
+        Node(package='robot_state_publisher', node_executable='robot_state_publisher', output='screen', arguments=[urdf]),
+        Node(package='moveit_ros_planning', node_executable='test_publish_dummy_joint_states', output='screen', arguments=[srdf])
     ])
     return ld

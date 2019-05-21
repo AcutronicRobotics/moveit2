@@ -17,7 +17,9 @@ int main(int argc, char * argv[])
 
   auto node = rclcpp::Node::make_shared("dummy_joint_states");
 
-  std::ifstream t(std::string("/home/erle/ros_mara_ws/src/MARA_ROS1/mara_moveit_config/config/mara.srdf"));
+  std::string nombre_srdf(argv[1]);
+
+  std::ifstream t(nombre_srdf);
   std::string str;
 
   t.seekg(0, std::ios::end);
