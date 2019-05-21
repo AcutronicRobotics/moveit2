@@ -47,9 +47,6 @@
 // Logger
 rclcpp::Logger LOGGER_OCTOMAP_FILTER = rclcpp::get_logger("moveit").get_child("collision_detection");;
 
-// static const double ISO_VALUE  = 0.5; // TODO magic number! (though, probably a good one).
-// static const double R_MULTIPLE = 1.5; // TODO magic number! (though, probably a good one).
-
 // forward declarations
 bool getMetaballSurfaceProperties(const octomap::point3d_list& cloud, const double& spacing, const double& iso_value,
                                   const double& r_multiple, const octomath::Vector3& contact_point,
