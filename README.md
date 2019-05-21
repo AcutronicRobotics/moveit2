@@ -194,6 +194,34 @@ Note that moveit2 is a work in progress. Limited effort has been allocated to pr
 
 <details><summary>Install and test options</summary>
 
+### From sources
+
+#### Ubuntu 18.04
+
+##### Install  ros2 dashing pre-release 
+
+Follow [this](https://discourse.ros.org/t/ros-2-dashing-diademata-call-for-testing-and-package-releases/8819) to install ros2 dashing pre-release 
+
+**NOTE**: Remove tf2 if you installed it from sources
+```
+sudo apt-get purge ros-dashing-tf2*
+```
+##### Compile moveit2 and dependencies:
+
+```bash
+mkdir -p ~/moveit2_ws/src
+cd ~/moveit2_ws/src
+git clone https://github.com/AcutronicRobotics/moveit2 -b master_compile
+cd ~/moveit2_ws
+vcs import src < src/moveit2/moveit2.repos
+colcon build --merge-install --cmake-args -DBUILD_TESTING=FALSE
+```
+
+
+#### OS X 10.14 (**DEPRECATED**)
+Refer to [https://acutronicrobotics.com/docs/products/robots/mara/moveit2/install/osx](https://acutronicrobotics.com/docs/products/robots/mara/moveit2/install/osx) (outdated)
+
+
 ### Using the CI infrastructure
 Moveit uses a Docker-based CI infrastructure to run tests and validate commits. Such infrastructure adapted for MoveIt 2 is available at https://github.com/acutronicrobotics/moveit_ci.git. 
 
@@ -232,10 +260,6 @@ docker run -it local-build
 # inside of the container, compile the moveit2 code
 colcon build --merge-install #Inside of the docker container
 ```
-
-### From sources (**DEPRECATED**)
-- [Ubuntu 18.04](https://acutronicrobotics.com/docs/products/robots/mara/moveit2/install/ubuntu)
-- [OS X 10.14](https://acutronicrobotics.com/docs/products/robots/mara/moveit2/install/osx) (**DEPRECATED**)
 
 </details>
 
