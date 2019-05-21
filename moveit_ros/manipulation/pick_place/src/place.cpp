@@ -50,7 +50,8 @@ PlacePlan::PlacePlan(const PickPlaceConstPtr& pick_place) : PickPlacePlanBase(pi
 namespace
 {
 bool transformToEndEffectorGoal(const geometry_msgs::msg::PoseStamped& goal_pose,
-                                const robot_state::AttachedBody* attached_body, geometry_msgs::msg::PoseStamped& place_pose)
+                                const robot_state::AttachedBody* attached_body,
+                                geometry_msgs::msg::PoseStamped& place_pose)
 {
   const EigenSTL::vector_Isometry3d& fixed_transforms = attached_body->getFixedTransforms();
   if (fixed_transforms.empty())
@@ -65,7 +66,8 @@ bool transformToEndEffectorGoal(const geometry_msgs::msg::PoseStamped& goal_pose
 }
 }  // namespace
 
-bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene, const moveit_msgs::action::Place::Goal& goal)
+bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene,
+                     const moveit_msgs::action::Place::Goal& goal)
 {
   double timeout = goal.allowed_planning_time;
   auto endtime = std::chrono::system_clock::now() + std::chrono::duration<double>(timeout);
@@ -82,7 +84,9 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
       const std::string& eef_parent = eef->getEndEffectorParentGroup().first;
       if (eef_parent.empty())
       {
-        RCLCPP_ERROR(node_->get_logger(), "No parent group to plan in was identified based on end-effector '%s'. Please define a parent group in the SRDF.",goal.group_name.c_str());
+        RCLCPP_ERROR(node_->get_logger(), "No parent group to plan in was identified based on end-effector '%s'. "
+                                          "Please define a parent group in the SRDF.",
+                     goal.group_name.c_str());
         error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GROUP_NAME;
         return false;
       }
@@ -100,7 +104,7 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
       const std::vector<std::string>& eef_names = jmg->getAttachedEndEffectorNames();
       if (eef_names.empty())
       {
-        RCLCPP_ERROR(node_->get_logger(), "There are no end-effectors specified for group '%s'",goal.group_name);
+        RCLCPP_ERROR(node_->get_logger(), "There are no end-effectors specified for group '%s'", goal.group_name);
         error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GROUP_NAME;
         return false;
       }
@@ -150,8 +154,11 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
             // if we previoulsy have set the eef it means we have more options we could use, so things are ambiguous
             if (eef)
             {
-              RCLCPP_ERROR(node_->get_logger(), "There are multiple end-effectors for group '%s' that are currently holding objects. It is ambiguous "
-                                                            "which end-effector to use. Please specify it explicitly.",goal.group_name.c_str());
+              RCLCPP_ERROR(
+                  node_->get_logger(),
+                  "There are multiple end-effectors for group '%s' that are currently holding objects. It is ambiguous "
+                  "which end-effector to use. Please specify it explicitly.",
+                  goal.group_name.c_str());
               error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GROUP_NAME;
               return false;
             }
@@ -178,8 +185,10 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
         {
           if (eef)
           {
-            RCLCPP_ERROR(node_->get_logger(), "There are multiple end-effectors that include the link '%s' which is where the body '%s'"
-                                               "is attached. It is unclear which end-effector to use.",link->getName().c_str(),attached_object_name.c_str());
+            RCLCPP_ERROR(node_->get_logger(),
+                         "There are multiple end-effectors that include the link '%s' which is where the body '%s'"
+                         "is attached. It is unclear which end-effector to use.",
+                         link->getName().c_str(), attached_object_name.c_str());
             error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GROUP_NAME;
             return false;
           }
@@ -192,7 +201,9 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
       const std::string& eef_parent = eef->getEndEffectorParentGroup().first;
       if (eef_parent.empty())
       {
-        RCLCPP_ERROR(node_->get_logger(), "No parent group to plan in was identified based on end-effector '%s'. Please define a parent group in the SRDF.",goal.group_name.c_str());
+        RCLCPP_ERROR(node_->get_logger(), "No parent group to plan in was identified based on end-effector '%s'. "
+                                          "Please define a parent group in the SRDF.",
+                     goal.group_name.c_str());
         error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GROUP_NAME;
         return false;
       }
@@ -220,8 +231,8 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
     if (attached_bodies.size() > 1)
     {
       RCLCPP_ERROR(node_->get_logger(),
-                      "Multiple attached bodies for group '%s' but no explicit attached object to place was specified",
-                      goal.group_name.c_str());
+                   "Multiple attached bodies for group '%s' but no explicit attached object to place was specified",
+                   goal.group_name.c_str());
       error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_OBJECT_NAME;
       return false;
     }
@@ -307,7 +318,7 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
     {
       p->goal_pose_ = pl.place_pose;
       RCLCPP_ERROR(node_->get_logger(), "Unable to transform the desired pose of the object to the pose of the "
-                                      "end-effector");
+                                        "end-effector");
     }
 
     p->approach_ = pl.pre_place_approach;
@@ -325,7 +336,8 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
 
   pipeline_.stop();
 
-  last_plan_time_ = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now() - start_time).count();
+  last_plan_time_ =
+      std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::system_clock::now() - start_time).count();
   double last_plan_time_sec = last_plan_time_ * 1.0e-9;
 
   if (!getSuccessfulManipulationPlans().empty())
@@ -339,7 +351,8 @@ bool PlacePlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene
       error_code_.val = moveit_msgs::msg::MoveItErrorCodes::PLANNING_FAILED;
       if (!goal.place_locations.empty())
       {
-        RCLCPP_WARN(node_->get_logger(), "All supplied place locations failed. Retrying last location in verbose mode.");
+        RCLCPP_WARN(node_->get_logger(),
+                    "All supplied place locations failed. Retrying last location in verbose mode.");
         // everything failed. we now start the pipeline again in verbose mode for one grasp
         initialize();
         pipeline_.setVerbose(true);

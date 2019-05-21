@@ -40,7 +40,7 @@
 
 namespace pick_place
 {
-  rclcpp::Logger LOGGER_PLAN_STAGE = rclcpp::get_logger("moveit_ros_manipulation").get_child("pick_place");
+rclcpp::Logger LOGGER_PLAN_STAGE = rclcpp::get_logger("moveit_ros_manipulation").get_child("pick_place");
 
 PlanStage::PlanStage(const planning_scene::PlanningSceneConstPtr& scene,
                      const planning_pipeline::PlanningPipelinePtr& planning_pipeline)
@@ -61,7 +61,9 @@ bool PlanStage::evaluate(const ManipulationPlanPtr& plan) const
   planning_interface::MotionPlanResponse res;
   req.group_name = plan->shared_data_->planning_group_->getName();
   req.num_planning_attempts = 1;
-  long time_out_nsec = std::chrono::duration_cast<std::chrono::nanoseconds>(plan->shared_data_->timeout_ - std::chrono::system_clock::now()).count();
+  long time_out_nsec = std::chrono::duration_cast<std::chrono::nanoseconds>(plan->shared_data_->timeout_ -
+                                                                            std::chrono::system_clock::now())
+                           .count();
   req.allowed_planning_time = (double)time_out_nsec * 1.0e-9;
   req.path_constraints = plan->shared_data_->path_constraints_;
   req.planner_id = plan->shared_data_->planner_id_;
@@ -74,7 +76,8 @@ bool PlanStage::evaluate(const ManipulationPlanPtr& plan) const
   {
     attempts++;
     if (!signal_stop_ && planning_pipeline_->generatePlan(planning_scene_, req, res) &&
-        res.error_code_.val == moveit_msgs::msg::MoveItErrorCodes::SUCCESS && res.trajectory_ && !res.trajectory_->empty())
+        res.error_code_.val == moveit_msgs::msg::MoveItErrorCodes::SUCCESS && res.trajectory_ &&
+        !res.trajectory_->empty())
     {
       // We have a valid motion plan, now apply pre-approach end effector posture (open gripper) if applicable
       if (!plan->approach_posture_.joint_names.empty())
@@ -94,8 +97,10 @@ bool PlanStage::evaluate(const ManipulationPlanPtr& plan) const
         }
         else
         {  // Do what was done before
-          RCLCPP_INFO(LOGGER_PLAN_STAGE,"Adding default duration of %f seconds to the grasp closure time. Assign time_from_start "
-                                                        "to your trajectory to avoid this.",PickPlace::DEFAULT_GRASP_POSTURE_COMPLETION_DURATION);
+          RCLCPP_INFO(LOGGER_PLAN_STAGE,
+                      "Adding default duration of %f seconds to the grasp closure time. Assign time_from_start "
+                      "to your trajectory to avoid this.",
+                      PickPlace::DEFAULT_GRASP_POSTURE_COMPLETION_DURATION);
           pre_approach_traj->addPrefixWayPoint(pre_approach_state,
                                                PickPlace::DEFAULT_GRASP_POSTURE_COMPLETION_DURATION);
         }
@@ -117,7 +122,8 @@ bool PlanStage::evaluate(const ManipulationPlanPtr& plan) const
       plan->error_code_ = res.error_code_;
   }
   // if the planner reported an invalid plan, give it a second chance
-  while (!signal_stop_ && plan->error_code_.val == moveit_msgs::msg::MoveItErrorCodes::INVALID_MOTION_PLAN && attempts < 2);
+  while (!signal_stop_ && plan->error_code_.val == moveit_msgs::msg::MoveItErrorCodes::INVALID_MOTION_PLAN &&
+         attempts < 2);
 
   return false;
 }

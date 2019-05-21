@@ -39,7 +39,8 @@
 #include <tf2_eigen/tf2_eigen.h>
 #include <boost/bind.hpp>
 
-rclcpp::Logger LOGGER_REACHABLE_VALID_POSE_FILTER = rclcpp::get_logger("moveit_ros_manipulation").get_child("reachable_valid_pose_filter");
+rclcpp::Logger LOGGER_REACHABLE_VALID_POSE_FILTER =
+    rclcpp::get_logger("moveit_ros_manipulation").get_child("reachable_valid_pose_filter");
 
 pick_place::ReachableAndValidPoseFilter::ReachableAndValidPoseFilter(
     const planning_scene::PlanningSceneConstPtr& scene,

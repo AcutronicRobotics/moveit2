@@ -78,7 +78,8 @@ public:
 
 protected:
   void initialize();
-  void waitForPipeline(const std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double>>& endtime);
+  void
+  waitForPipeline(const std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double>>& endtime);
   void foundSolution();
   void emptyQueue();
 

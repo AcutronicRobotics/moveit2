@@ -81,7 +81,8 @@ void PickPlacePlanBase::initialize()
   pushed_all_poses_ = false;
 }
 
-void PickPlacePlanBase::waitForPipeline(const std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double>>& endtime)
+void PickPlacePlanBase::waitForPipeline(
+    const std::chrono::time_point<std::chrono::system_clock, std::chrono::duration<double>>& endtime)
 {
   // wait till we're done
   boost::unique_lock<boost::mutex> lock(done_mutex_);
@@ -92,13 +93,15 @@ void PickPlacePlanBase::waitForPipeline(const std::chrono::time_point<std::chron
   auto pt_time = boost::posix_time::from_time_t(dur_sec) + boost::posix_time::microseconds(dur / 1000);
 
   while (!done_ && endtime > std::chrono::system_clock::now())
-    done_condition_.timed_wait(lock,pt_time);
+    done_condition_.timed_wait(lock, pt_time);
 }
 
-PickPlace::PickPlace(const planning_pipeline::PlanningPipelinePtr& planning_pipeline, const rclcpp::Node::SharedPtr& node)
+PickPlace::PickPlace(const planning_pipeline::PlanningPipelinePtr& planning_pipeline,
+                     const rclcpp::Node::SharedPtr& node)
   : node_(node), planning_pipeline_(planning_pipeline), display_computed_motion_plans_(false), display_grasps_(false)
 {
-  constraint_sampler_manager_loader_.reset(new constraint_sampler_manager_loader::ConstraintSamplerManagerLoader(node_));
+  constraint_sampler_manager_loader_.reset(
+      new constraint_sampler_manager_loader::ConstraintSamplerManagerLoader(node_));
 }
 
 void PickPlace::displayProcessedGrasps(bool flag)

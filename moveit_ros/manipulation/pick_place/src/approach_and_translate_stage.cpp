@@ -41,7 +41,8 @@
 
 namespace pick_place
 {
-  rclcpp::Logger LOGGER_APPROACH_AND_TRANSLATE_STAGE = rclcpp::get_logger("moveit_ros_manipulation").get_child("approach_and_trandlate_stage");
+rclcpp::Logger LOGGER_APPROACH_AND_TRANSLATE_STAGE =
+    rclcpp::get_logger("moveit_ros_manipulation").get_child("approach_and_trandlate_stage");
 ApproachAndTranslateStage::ApproachAndTranslateStage(
     const planning_scene::PlanningSceneConstPtr& scene,
     const collision_detection::AllowedCollisionMatrixConstPtr& collision_matrix)
@@ -130,8 +131,9 @@ bool executeAttachObject(const ManipulationPlanSharedDataConstPtr& shared_plan_d
     return true;
   }
 
-  RCLCPP_DEBUG(LOGGER_APPROACH_AND_TRANSLATE_STAGE, "Applying attached object diff to maintained planning scene (attaching/detaching "
-                                  "object to end effector)");
+  RCLCPP_DEBUG(LOGGER_APPROACH_AND_TRANSLATE_STAGE,
+               "Applying attached object diff to maintained planning scene (attaching/detaching "
+               "object to end effector)");
   bool ok = false;
   {
     planning_scene_monitor::LockedPlanningSceneRW ps(motion_plan->planning_scene_monitor_);
@@ -171,9 +173,10 @@ void addGripperTrajectory(const ManipulationPlanPtr& plan,
     }
     else
     {  // Do what was done before
-      RCLCPP_INFO(LOGGER_APPROACH_AND_TRANSLATE_STAGE,"Adding default duration of %f"
-                                                    " seconds to the grasp closure time. Assign time_from_start to "
-                                                    "your trajectory to avoid this.",PickPlace::DEFAULT_GRASP_POSTURE_COMPLETION_DURATION);
+      RCLCPP_INFO(LOGGER_APPROACH_AND_TRANSLATE_STAGE, "Adding default duration of %f"
+                                                       " seconds to the grasp closure time. Assign time_from_start to "
+                                                       "your trajectory to avoid this.",
+                  PickPlace::DEFAULT_GRASP_POSTURE_COMPLETION_DURATION);
       ee_closed_traj->addPrefixWayPoint(ee_closed_state, PickPlace::DEFAULT_GRASP_POSTURE_COMPLETION_DURATION);
     }
 
@@ -186,7 +189,8 @@ void addGripperTrajectory(const ManipulationPlanPtr& plan,
   }
   else
   {
-    RCLCPP_WARN(LOGGER_APPROACH_AND_TRANSLATE_STAGE, "No joint states of grasp postures have been defined in the pick place action.");
+    RCLCPP_WARN(LOGGER_APPROACH_AND_TRANSLATE_STAGE,
+                "No joint states of grasp postures have been defined in the pick place action.");
   }
 }
 

@@ -41,7 +41,6 @@ namespace pick_place
 {
 namespace
 {
-
 class DynamicReconfigureImpl
 {
 public:
@@ -56,13 +55,9 @@ public:
     auto pick_place_parameters = std::make_shared<rclcpp::SyncParametersClient>(node_);
 
     auto set_parameters_results = pick_place_parameters->set_parameters({
-      rclcpp::Parameter("max_attempted_states_per_pose", 5),
-      rclcpp::Parameter("max_consecutive_fail_attempts", 3),
-      rclcpp::Parameter("cartesian_motion_step_size", 0.02),
-      rclcpp::Parameter("jump_factor", 2.0),
+        rclcpp::Parameter("max_attempted_states_per_pose", 5), rclcpp::Parameter("max_consecutive_fail_attempts", 3),
+        rclcpp::Parameter("cartesian_motion_step_size", 0.02), rclcpp::Parameter("jump_factor", 2.0),
     });
-
-
   }
 
   const PickPlaceParams& getParams() const
@@ -78,22 +73,28 @@ private:
   {
     auto pick_place_parameters = std::make_shared<rclcpp::SyncParametersClient>(node_);
 
-    for (auto & parameter : pick_place_parameters->get_parameters({"max_attempted_states_per_pose", "max_consecutive_fail_attempts", "cartesian_motion_step_size", "jump_factor"})) {
-        if(parameter.get_name().compare("max_attempted_states_per_pose") == 0){
-          params_.max_goal_count_ = parameter.as_int();
-        }
-        if(parameter.get_name().compare("max_consecutive_fail_attempts") == 0){
-          params_.max_fail_ = parameter.as_int();
-        }
-        if(parameter.get_name().compare("cartesian_motion_step_size") == 0){
-          params_.max_step_ = parameter.as_double();
-        }
-        if(parameter.get_name().compare("jump_factor") == 0){
-          params_.jump_factor_ = parameter.as_double();
-        }
+    for (auto& parameter :
+         pick_place_parameters->get_parameters({ "max_attempted_states_per_pose", "max_consecutive_fail_attempts",
+                                                 "cartesian_motion_step_size", "jump_factor" }))
+    {
+      if (parameter.get_name().compare("max_attempted_states_per_pose") == 0)
+      {
+        params_.max_goal_count_ = parameter.as_int();
+      }
+      if (parameter.get_name().compare("max_consecutive_fail_attempts") == 0)
+      {
+        params_.max_fail_ = parameter.as_int();
+      }
+      if (parameter.get_name().compare("cartesian_motion_step_size") == 0)
+      {
+        params_.max_step_ = parameter.as_double();
+      }
+      if (parameter.get_name().compare("jump_factor") == 0)
+      {
+        params_.jump_factor_ = parameter.as_double();
+      }
     }
   }
-
 };
 }  // namespace
 }  // namespace pick_place

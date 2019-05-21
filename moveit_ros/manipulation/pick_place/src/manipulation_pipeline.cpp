@@ -38,7 +38,8 @@
 
 namespace pick_place
 {
-  rclcpp::Logger LOGGER_MANIPULATION_PIPELINE = rclcpp::get_logger("moveit_ros_manipulation").get_child("manipulation_pipeline");
+rclcpp::Logger LOGGER_MANIPULATION_PIPELINE =
+    rclcpp::get_logger("moveit_ros_manipulation").get_child("manipulation_pipeline");
 ManipulationPipeline::ManipulationPipeline(const std::string& name, unsigned int nthreads)
   : name_(name), nthreads_(nthreads), verbose_(false), stop_processing_(true)
 {
@@ -139,7 +140,7 @@ void ManipulationPipeline::stop()
 
 void ManipulationPipeline::processingThread(unsigned int index)
 {
-  RCLCPP_DEBUG(LOGGER_MANIPULATION_PIPELINE, "Start thread %d for '%s'",index, name_.c_str());
+  RCLCPP_DEBUG(LOGGER_MANIPULATION_PIPELINE, "Start thread %d for '%s'", index, name_.c_str());
 
   while (!stop_processing_)
   {
@@ -177,7 +178,8 @@ void ManipulationPipeline::processingThread(unsigned int index)
           {
             boost::mutex::scoped_lock slock(result_lock_);
             failed_.push_back(g);
-            RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Manipulation plan %d failed at stage '%s' on thread %d",g->id_ ,stages_[i]->getName().c_str(), index);
+            RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Manipulation plan %d failed at stage '%s' on thread %d", g->id_,
+                        stages_[i]->getName().c_str(), index);
             break;
           }
         }
@@ -207,7 +209,8 @@ void ManipulationPipeline::push(const ManipulationPlanPtr& plan)
 {
   boost::mutex::scoped_lock slock(queue_access_lock_);
   queue_.push_back(plan);
-  RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Added plan for pipeline '%s'. Queue is now of size %d",name_.c_str(), queue_.size());
+  RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Added plan for pipeline '%s'. Queue is now of size %d", name_.c_str(),
+              queue_.size());
   queue_access_cond_.notify_all();
 }
 
@@ -220,7 +223,8 @@ void ManipulationPipeline::reprocessLastFailure()
   failed_.pop_back();
   plan->clear();
   queue_.push_back(plan);
-  RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Re-added last failed plan for pipeline '%s'. Queue is now of size %f",name_.c_str(), queue_.size());
+  RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Re-added last failed plan for pipeline '%s'. Queue is now of size %f",
+              name_.c_str(), queue_.size());
   queue_access_cond_.notify_all();
 }
 }  // namespace pick_place
