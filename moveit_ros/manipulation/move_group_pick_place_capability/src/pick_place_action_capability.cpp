@@ -79,14 +79,14 @@ rclcpp_action::GoalResponse move_group::MoveGroupPickPlaceAction::place_handle_g
 }
 
 rclcpp_action::CancelResponse move_group::MoveGroupPickPlaceAction::place_handle_cancel(
-  const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle)
+  const std::shared_ptr<GoalHandlePlace> goal_handle)
 {
     RCLCPP_INFO(rclcpp::get_logger("pick_place_action_capability"), "Got request to cancel Place goal");
     (void)goal_handle;
     return rclcpp_action::CancelResponse::ACCEPT;
 }
 
-void move_group::MoveGroupPickPlaceAction::place_handle_accepted(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::place_handle_accepted(const std::shared_ptr<GoalHandlePlace> goal_handle)
 {
   std::thread(&move_group::MoveGroupPickPlaceAction::executePlaceCallback, this, goal_handle).detach();
 }
@@ -100,39 +100,39 @@ rclcpp_action::GoalResponse move_group::MoveGroupPickPlaceAction::pickup_handle_
 }
 
 rclcpp_action::CancelResponse move_group::MoveGroupPickPlaceAction::pickup_handle_cancel(
-  const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle)
+  const std::shared_ptr<GoalHandlePickup> goal_handle)
 {
     RCLCPP_INFO(rclcpp::get_logger("pick_place_action_capability"), "Got request to cancel Pickup goal");
     (void)goal_handle;
     return rclcpp_action::CancelResponse::ACCEPT;
 }
 
-void move_group::MoveGroupPickPlaceAction::pickup_handle_accepted(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::pickup_handle_accepted(const std::shared_ptr<GoalHandlePickup> goal_handle)
 {
   std::thread(&move_group::MoveGroupPickPlaceAction::executePickupCallback, this, goal_handle).detach();
 }
 
-void move_group::MoveGroupPickPlaceAction::startPickupExecutionCallback(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::startPickupExecutionCallback(const std::shared_ptr<GoalHandlePickup> goal_handle)
 {
   setPickupState(MONITOR,goal_handle);
 }
 
-void move_group::MoveGroupPickPlaceAction::startPickupLookCallback(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::startPickupLookCallback(const std::shared_ptr<GoalHandlePickup> goal_handle)
 {
   setPickupState(LOOK,goal_handle);
 }
 
-void move_group::MoveGroupPickPlaceAction::startPlaceExecutionCallback(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::startPlaceExecutionCallback(const std::shared_ptr<GoalHandlePlace> goal_handle)
 {
   setPlaceState(MONITOR,goal_handle);
 }
 
-void move_group::MoveGroupPickPlaceAction::startPlaceLookCallback(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::startPlaceLookCallback(const std::shared_ptr<GoalHandlePlace> goal_handle)
 {
   setPlaceState(LOOK,goal_handle);
 }
 
-void move_group::MoveGroupPickPlaceAction::executePickupCallbackPlanOnly(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle,
+void move_group::MoveGroupPickPlaceAction::executePickupCallbackPlanOnly(const std::shared_ptr<GoalHandlePickup> goal_handle,
                                                                          std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res)
 {
   pick_place::PickPlanPtr plan;
@@ -213,7 +213,7 @@ void move_group::MoveGroupPickPlaceAction::executePlaceCallbackPlanOnly(const st
   }
 }
 
-bool move_group::MoveGroupPickPlaceAction::planUsingPickPlacePickup(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle,
+bool move_group::MoveGroupPickPlaceAction::planUsingPickPlacePickup(const std::shared_ptr<GoalHandlePickup> goal_handle,
                                                                     std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res,
                                                                     plan_execution::ExecutableMotionPlan& plan)
 {
@@ -256,7 +256,7 @@ bool move_group::MoveGroupPickPlaceAction::planUsingPickPlacePickup(const std::s
   return plan.error_code_.val == moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
 }
 
-bool move_group::MoveGroupPickPlaceAction::planUsingPickPlacePlace(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle,
+bool move_group::MoveGroupPickPlaceAction::planUsingPickPlacePlace(const std::shared_ptr<GoalHandlePlace> goal_handle,
                                                                    std::shared_ptr<moveit_msgs::action::Place::Result>& action_res,
                                                                    plan_execution::ExecutableMotionPlan& plan)
 {
@@ -300,7 +300,7 @@ bool move_group::MoveGroupPickPlaceAction::planUsingPickPlacePlace(const std::sh
 }
 
 void move_group::MoveGroupPickPlaceAction::executePickupCallbackPlanAndExecute(
-    const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle, std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res)
+    const std::shared_ptr<GoalHandlePickup> goal_handle, std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res)
 {
   plan_execution::PlanExecution::Options opt;
   const auto goal = goal_handle->get_goal();
@@ -330,7 +330,7 @@ void move_group::MoveGroupPickPlaceAction::executePickupCallbackPlanAndExecute(
 }
 
 void move_group::MoveGroupPickPlaceAction::executePlaceCallbackPlanAndExecute(
-    const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle, std::shared_ptr<moveit_msgs::action::Place::Result>& action_res)
+    const std::shared_ptr<GoalHandlePlace> goal_handle, std::shared_ptr<moveit_msgs::action::Place::Result>& action_res)
 {
   plan_execution::PlanExecution::Options opt;
   const auto goal = goal_handle->get_goal();
@@ -359,7 +359,7 @@ void move_group::MoveGroupPickPlaceAction::executePlaceCallbackPlanAndExecute(
   action_res->error_code = plan.error_code_;
 }
 
-void move_group::MoveGroupPickPlaceAction::executePickupCallback(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::executePickupCallback(const std::shared_ptr<GoalHandlePickup> goal_handle)
 {
   setPickupState(PLANNING,goal_handle);
   auto input_goal = goal_handle->get_goal();
@@ -406,7 +406,7 @@ void move_group::MoveGroupPickPlaceAction::executePickupCallback(const std::shar
   setPickupState(IDLE,goal_handle);
 }
 
-void move_group::MoveGroupPickPlaceAction::executePlaceCallback(const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle)
+void move_group::MoveGroupPickPlaceAction::executePlaceCallback(const std::shared_ptr<GoalHandlePlace> goal_handle)
 {
   setPlaceState(PLANNING,goal_handle);
   auto goal = goal_handle->get_goal();
@@ -453,7 +453,7 @@ void move_group::MoveGroupPickPlaceAction::preemptPlaceCallback()
 }
 
 void move_group::MoveGroupPickPlaceAction::setPickupState(MoveGroupState state,
-  const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Pickup>> goal_handle)
+  const std::shared_ptr<GoalHandlePickup> goal_handle)
 {
   pickup_state_ = state;
   pickup_feedback_.state = stateToStr(state);
@@ -462,7 +462,7 @@ void move_group::MoveGroupPickPlaceAction::setPickupState(MoveGroupState state,
 }
 
 void move_group::MoveGroupPickPlaceAction::setPlaceState(MoveGroupState state,
-  const std::shared_ptr<rclcpp_action::ServerGoalHandle<moveit_msgs::action::Place>> goal_handle)
+  const std::shared_ptr<GoalHandlePlace> goal_handle)
 {
   place_state_ = state;
   place_feedback_.state = stateToStr(state);
