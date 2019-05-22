@@ -80,6 +80,7 @@ ENV DOCKER 1 # old version, keep for now
 
 # setup entrypoint https://github.com/docker/hub-feedback/issues/811
 #RUN echo '#!/bin/bash\nset -e\nsource "/opt/ros/$ROS_DISTRO/setup.bash"\nexec "$@"' > /docker-entrypoint.sh && chmod +x /docker-entrypoint.sh
+RUN find /opt/ros/dashing/ -name image_* | xargs rm -rf && find /opt/ros/dashing/ -name tf2* | xargs rm -rf
 COPY ./docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
