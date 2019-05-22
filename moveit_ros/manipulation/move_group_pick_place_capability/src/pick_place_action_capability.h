@@ -63,8 +63,8 @@ private:
 
   void executePickupCallbackPlanOnly(const std::shared_ptr<GoalHandlePickup> goal_handle,
                                      std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res);
-  void executePickupCallbackPlanAndExecute(
-      const std::shared_ptr<GoalHandlePickup> goal_handle, std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res);
+  void executePickupCallbackPlanAndExecute(const std::shared_ptr<GoalHandlePickup> goal_handle,
+                                           std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res);
 
   void executePlaceCallbackPlanOnly(const std::shared_ptr<const moveit_msgs::action::Place::Goal>& goal,
                                     std::shared_ptr<moveit_msgs::action::Place::Result>& action_res);
@@ -72,9 +72,10 @@ private:
                                           std::shared_ptr<moveit_msgs::action::Place::Result>& action_res);
 
   bool planUsingPickPlacePickup(const std::shared_ptr<GoalHandlePickup> goal_handle,
-                                                                      std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res,
-                                                                      plan_execution::ExecutableMotionPlan& plan);
-  bool planUsingPickPlacePlace(const std::shared_ptr<GoalHandlePlace> goal_handle, std::shared_ptr<moveit_msgs::action::Place::Result>& action_res,
+                                std::shared_ptr<moveit_msgs::action::Pickup::Result>& action_res,
+                                plan_execution::ExecutableMotionPlan& plan);
+  bool planUsingPickPlacePlace(const std::shared_ptr<GoalHandlePlace> goal_handle,
+                               std::shared_ptr<moveit_msgs::action::Place::Result>& action_res,
                                plan_execution::ExecutableMotionPlan& plan);
 
   void preemptPickupCallback();
@@ -91,19 +92,17 @@ private:
 
   void fillGrasps(moveit_msgs::action::Pickup::Goal& goal);
 
-  rclcpp_action::GoalResponse pickup_handle_goal(
-   const rclcpp_action::GoalUUID & uuid, std::shared_ptr<const moveit_msgs::action::Pickup::Goal> goal);
+  rclcpp_action::GoalResponse pickup_handle_goal(const rclcpp_action::GoalUUID& uuid,
+                                                 std::shared_ptr<const moveit_msgs::action::Pickup::Goal> goal);
 
-  rclcpp_action::CancelResponse pickup_handle_cancel(
-     const std::shared_ptr<GoalHandlePickup> goal_handle);
+  rclcpp_action::CancelResponse pickup_handle_cancel(const std::shared_ptr<GoalHandlePickup> goal_handle);
 
   void pickup_handle_accepted(const std::shared_ptr<GoalHandlePickup> goal_handle);
 
-  rclcpp_action::GoalResponse place_handle_goal(
-   const rclcpp_action::GoalUUID & uuid, std::shared_ptr<const moveit_msgs::action::Place::Goal> goal);
+  rclcpp_action::GoalResponse place_handle_goal(const rclcpp_action::GoalUUID& uuid,
+                                                std::shared_ptr<const moveit_msgs::action::Place::Goal> goal);
 
-  rclcpp_action::CancelResponse place_handle_cancel(
-     const std::shared_ptr<GoalHandlePlace> goal_handle);
+  rclcpp_action::CancelResponse place_handle_cancel(const std::shared_ptr<GoalHandlePlace> goal_handle);
 
   void place_handle_accepted(const std::shared_ptr<GoalHandlePlace> goal_handle);
 
