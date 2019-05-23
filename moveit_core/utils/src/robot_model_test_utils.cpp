@@ -39,6 +39,7 @@
 #include <boost/math/constants/constants.hpp>
 #include <geometry_msgs/msg/pose.hpp>
 #include "moveit/utils/robot_model_test_utils.h"
+#include <ament_index_cpp/get_package_share_directory.hpp>
 
 namespace moveit
 {
@@ -56,15 +57,23 @@ moveit::core::RobotModelPtr loadTestingRobotModel(const std::string& robot_name)
 
 urdf::ModelInterfaceSharedPtr loadModelInterface(const std::string& robot_name)
 {
-  boost::filesystem::path res_path(MOVEIT_TEST_RESOURCES_DIR);
+  // std::string test_name = MOVEIT_TEST_RESOURCES_DIR;
+  // std::string rem = "share/";
+  // std::string::size_type find = test_name.find(rem);
+  // test_name.erase(find,rem.length());
+  // boost::filesystem::path res_path(ament_index_cpp::get_package_share_directory(test_name));
+  std::string res_path = ament_index_cpp::get_package_share_directory("moveit_resources");
+
   std::string urdf_path;
   if (robot_name == "pr2")
   {
-    urdf_path = (res_path / "pr2_description/urdf/robot.xml").string();
+    urdf_path = res_path + "/pr2_description/urdf/robot.xml";
+    // urdf_path = (res_path / "pr2_description/urdf/robot.xml").string();
   }
   else
   {
-    urdf_path = (res_path / (robot_name + "_description") / "urdf" / (robot_name + ".urdf")).string();
+    urdf_path = res_path +"/"+robot_name + "_description/urdf/"+robot_name + ".urdf";
+    // urdf_path = (res_path / (robot_name + "_description") / "urdf" / (robot_name + ".urdf")).string();
   }
   urdf::ModelInterfaceSharedPtr urdf_model = urdf::parseURDFFile(urdf_path);
   if (urdf_model == nullptr)
@@ -77,17 +86,26 @@ urdf::ModelInterfaceSharedPtr loadModelInterface(const std::string& robot_name)
 
 srdf::ModelSharedPtr loadSRDFModel(const std::string& robot_name)
 {
-  boost::filesystem::path res_path(MOVEIT_TEST_RESOURCES_DIR);
+  // std::string test_name = MOVEIT_TEST_RESOURCES_DIR;
+  // std::string rem = "share/";
+  // std::string::size_type find = test_name.find(rem);
+  // test_name.erase(find,rem.length());
+  // boost::filesystem::path res_path(ament_index_cpp::get_package_share_directory(test_name));
+
+  std::string res_path = ament_index_cpp::get_package_share_directory("moveit_resources");
+
   urdf::ModelInterfaceSharedPtr urdf_model = loadModelInterface(robot_name);
   srdf::ModelSharedPtr srdf_model(new srdf::Model());
   std::string srdf_path;
   if (robot_name == "pr2")
   {
-    srdf_path = (res_path / "pr2_description/srdf/robot.xml").string();
+    srdf_path = res_path + "/pr2_description/urdf/robot.xml";
+    // srdf_path = (res_path / "pr2_description/srdf/robot.xml").string();
   }
   else
   {
-    srdf_path = (res_path / (robot_name + "_moveit_config") / "config" / (robot_name + ".srdf")).string();
+    srdf_path = res_path +"/"+robot_name + "_moveit_config/config/"+robot_name + ".urdf";
+    // srdf_path = (res_path / (robot_name + "_moveit_config") / "config" / (robot_name + ".srdf")).string();
   }
   srdf_model->initFile(*urdf_model, srdf_path);
   return srdf_model;

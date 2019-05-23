@@ -6,7 +6,7 @@ add_library(${MOVEIT_LIB_NAME} SHARED
 )
 
 include_directories(include)
-ament_target_dependencies(${MOVEIT_LIB_NAME} visualization_msgs)
+ament_target_dependencies(${MOVEIT_LIB_NAME} visualization_msgs ament_index_cpp)
 set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
 
 install(TARGETS ${MOVEIT_LIB_NAME}
