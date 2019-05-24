@@ -44,31 +44,34 @@ if(BUILD_TESTING)
 	  set(append_library_dirs "${CMAKE_CURRENT_BINARY_DIR}:${CMAKE_CURRENT_BINARY_DIR}/../utils")
 	endif()
 
-  ament_add_gtest(test_moveit_robot_model test/test.cpp
-				APPEND_LIBRARY_DIRS "${append_library_dirs}"
-	)
-
-  if(TARGET test_moveit_robot_model)
+    ament_add_gtest(test_moveit_robot_model test/test.cpp
+  				APPEND_LIBRARY_DIRS "${append_library_dirs}"
+  	)
     target_link_libraries(test_moveit_robot_model ${MOVEIT_LIB_NAME}
-      ${Boost_LIBRARIES}
+			${Boost_LIBRARIES}
 			${rclcpp_LIBRARIES}
+			${MOVEIT_LIB_NAME}
 			moveit_test_utils
 			moveit_utils
 			moveit_profiler
 			moveit_exceptions
-      moveit_robot_model
+			${moveit_profiler_LIBRARIES}
+			${srdfdom_LIBRARIES}
+			${urdfdom_LIBRARIES}
+			${urdf_LIBRARIES}
+			${geometric_shapes_LIBRARIES}
+			resource_retriever::resource_retriever
     )
-  endif()
-	# target_include_directories(test_moveit_robot_model PUBLIC
-					# ${Boost_INCLUDE_DIRS}
-					# ${rclcpp_INCLUDE_DIRS}
-					# ${srdfdom_INCLUDE_DIRS}
-					# ${urdfdom_INCLUDE_DIRS}
-					# ${urdf_INCLUDE_DIRS}
-					# ${geometric_shapes_INCLUDE_DIRS}
-					# ${urdfdom_headers_INCLUDE_DIRS}
-					# ${resource_retriever_INCLUDE_DIRS}
-	# )
+    target_include_directories(test_moveit_robot_model PUBLIC
+            ${Boost_INCLUDE_DIRS}
+            ${rclcpp_INCLUDE_DIRS}
+            ${srdfdom_INCLUDE_DIRS}
+            ${urdfdom_INCLUDE_DIRS}
+            ${urdf_INCLUDE_DIRS}
+            ${geometric_shapes_INCLUDE_DIRS}
+            ${urdfdom_headers_INCLUDE_DIRS}
+            ${resource_retriever_INCLUDE_DIRS}
+    )
 
 endif()
 
