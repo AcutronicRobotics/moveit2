@@ -18,5 +18,5 @@ cp -r moveit_msgs/dashing_pre-release/* ros2_dashing/
 cp -r object_recognition_msgs/dashing_pre-release/* ros2_dashing/
 cp -r octomap_msgs/dashing_pre-release/* ros2_dashing/
 # Remove tf2_eigen
-find ros2-osx/ -name tf2_eigen | xargs rm -rf
-find ros2-osx/ -name resource_retriever | xargs rm -rf
+find ros2_dashing/ -name tf2* | xargs rm -rf
+find ros2_dashing/ -name resource_retriever | xargs rm -rf

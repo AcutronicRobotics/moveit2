@@ -5,7 +5,7 @@ set -e #exit on failure
 
 export dir=$(PWD)
 cd /tmp
-source /tmp/ros2-osx/setup.bash
+source /tmp/ros2_dashing/setup.bash
 mkdir -p /tmp/ros2_ws/src
 cp -r $dir /tmp/ros2_ws/src/moveit2
 cd /tmp/ros2_ws && wget https://raw.githubusercontent.com/AcutronicRobotics/moveit2/master/moveit2.repos
