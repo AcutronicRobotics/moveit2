@@ -10,25 +10,25 @@ notifications:
 
 matrix:
   include:
-    - os: linux
-      dist: trusty # distro used by Travis, moveit_ci uses the docker image's distro
-      services:
-        - docker
-      sudo:
-        - required
-#    - os: osx
-#      osx_image: xcode10.1
+    #    - os: linux
+    #  dist: trusty # distro used by Travis, moveit_ci uses the docker image's distro
+    #  services:
+    #    - docker
+    #  sudo:
+    #    - required
+    - os: osx
+      osx_image: xcode10.1
 
 before_script:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source .travis.${TRAVIS_OS_NAME}.env; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source .travis.${TRAVIS_OS_NAME}.env; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx-dependencies.sh; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir /tmp/moveit2; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp -r * /tmp/moveit2; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git clone -q -b dashing --depth=1 https://github.com/acutronicrobotics/moveit_ci.git .moveit_ci; fi
+  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then source .travis.${TRAVIS_OS_NAME}.env; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then source .travis.${TRAVIS_OS_NAME}.env; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash ./osx-dependencies.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then mkdir /tmp/moveit2; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp -r * /tmp/moveit2; fi
+  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git clone -q -b dashing --depth=1 https://github.com/acutronicrobotics/moveit_ci.git .moveit_ci; fi
 
 script:
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then .moveit_ci/travis.sh; fi
-    # - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash /tmp/moveit2/osx-dependencies.sh; fi
-    #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash /tmp/moveit2/osx-install-ros2-binary.sh; fi
+  #- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then .moveit_ci/travis.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash /tmp/moveit2/osx-dependencies.sh; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash /tmp/moveit2/osx-install-ros2-binary.sh; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then bash /tmp/moveit2/osx-compile-moveit2.sh; fi
