@@ -32,4 +32,4 @@ export LIBRARY_PATH="/usr/local/opt/tinyxml2/lib/:/usr/local/lib/"
 
 # Build
 cd /tmp/ros2_ws
-colcon build --merge-install --cmake-args -DOpenMP_C_LIB_NAMES="omp" -DOpenMP_CXX_LIB_NAMES="omp" -DOpenMP_C_FLAGS="-Xpreprocessor -fopenmp -lomp -I/usr/local/opt/libomp/include" -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -lomp -I/usr/local/opt/libomp/include" -DOpenMP_omp_LIBRARY="/usr/local/opt/libomp/lib/libomp.dylib"
+colcon build --merge-install --cmake-args -DBUILD_TESTING=False -DOpenMP_C_LIB_NAMES="omp" -DOpenMP_CXX_LIB_NAMES="omp" -DOpenMP_C_FLAGS="-Xpreprocessor -fopenmp -lomp -I/usr/local/opt/libomp/include" -DOpenMP_CXX_FLAGS="-Xpreprocessor -fopenmp -lomp -I/usr/local/opt/libomp/include" -DOpenMP_omp_LIBRARY="/usr/local/opt/libomp/lib/libomp.dylib"
