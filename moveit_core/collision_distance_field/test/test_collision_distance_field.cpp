@@ -78,11 +78,8 @@ protected:
     else
       urdf_ok_ = false;
     srdf_ok_ = srdf_model_->initFile(*urdf_model_, MOVEIT_TEST_RESOURCES_DIR "/pr2_description/srdf/robot.xml");
-
     robot_model_.reset(new robot_model::RobotModel(urdf_model_, srdf_model_));
-
     acm_.reset(new collision_detection::AllowedCollisionMatrix(robot_model_->getLinkModelNames(), true));
-
     std::map<std::string, std::vector<collision_detection::CollisionSphere>> link_body_decompositions;
     crobot_.reset(new DefaultCRobotType(robot_model_, link_body_decompositions));
     cworld_.reset(new DefaultCWorldType());

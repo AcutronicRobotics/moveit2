@@ -64,8 +64,8 @@ CollisionRobotDistanceField::CollisionRobotDistanceField(
     double max_propogation_distance, double padding, double scale)
   : CollisionRobot(robot_model, padding, scale)
 {
-  initialize(link_body_decompositions, Eigen::Vector3d(size_x, size_y, size_z), Eigen::Vector3d(0, 0, 0),
-             use_signed_distance_field, resolution, collision_tolerance, max_propogation_distance);
+    initialize(link_body_decompositions, Eigen::Vector3d(size_x, size_y, size_z), Eigen::Vector3d(0, 0, 0),
+         use_signed_distance_field, resolution, collision_tolerance, max_propogation_distance);
 }
 
 CollisionRobotDistanceField::CollisionRobotDistanceField(const CollisionRobot& col_robot, const Eigen::Vector3d& size,
@@ -296,7 +296,7 @@ bool CollisionRobotDistanceField::getSelfCollisions(const collision_detection::C
             con.body_name_1 = gsr->dfce_->attached_body_names_[i - gsr->dfce_->link_names_.size()];
           }
 
-          RCLCPP_DEBUG(LOGGER_COLLISION_DISTANCE_FIELD, ("Self collision detected for link %s ", con.body_name_1).c_str());
+          RCLCPP_DEBUG(LOGGER_COLLISION_DISTANCE_FIELD, "Self collision detected for link %s ", con.body_name_1.c_str());
 
           con.body_type_2 = collision_detection::BodyTypes::ROBOT_LINK;
           con.body_name_2 = "self";
@@ -883,7 +883,7 @@ DistanceFieldCacheEntryPtr CollisionRobotDistanceField::generateDistanceFieldCac
     if (updated_map.count(*name_iter) == 0)
     {
       dfce->state_check_indices_.push_back(dfce->state_values_.size() - 1);
-      RCLCPP_DEBUG(LOGGER_COLLISION_DISTANCE_FIELD, ("Non-group joint %p will be checked for state changes", *name_iter).c_str());
+      RCLCPP_DEBUG(LOGGER_COLLISION_DISTANCE_FIELD, "Non-group joint %p will be checked for state changes", name_iter);
     }
   }
 
