@@ -69,5 +69,5 @@ repositories:
      version: dashing
   geometry2:
      type: git
-     url: https://github.com/ros2/geometry2
+     url: https://github.com/acutronicrobotics/geometry2
      version: ros2
