@@ -27,10 +27,6 @@ repositories:
     type: git
     url: https://github.com/acutronicrobotics/geometry2/
     version: ros2
-  image_common:
-    type: git
-    url: https://github.com/ros-perception/image_common
-    version: ros2
   vision_opencv:
     type: git
     url: https://github.com/ros-perception/vision_opencv
