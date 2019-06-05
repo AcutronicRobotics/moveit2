@@ -67,3 +67,7 @@ repositories:
      type: git
      url: https://github.com/ros/pluginlib
      version: dashing
+  geometry2:
+     type: git
+     url: https://github.com/ros2/geometry2
+     version: ros2
