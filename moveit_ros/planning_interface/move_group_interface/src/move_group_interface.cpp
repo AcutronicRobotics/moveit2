@@ -588,12 +588,12 @@ public:
 //   {
 //     pose_reference_frame_ = pose_reference_frame;
 //   }
-//
-//   void setSupportSurfaceName(const std::string& support_surface)
-//   {
-//     support_surface_ = support_surface;
-//   }
-//
+
+  void setSupportSurfaceName(const std::string& support_surface)
+  {
+    support_surface_ = support_surface;
+  }
+
   const std::string& getPoseReferenceFrame() const
   {
     return pose_reference_frame_;
@@ -2358,22 +2358,22 @@ robot_state::RobotStatePtr moveit::planning_interface::MoveGroupInterface::getCu
 // }
 //
 // /** \brief Set time allowed to planner to solve problem before aborting */
-// void moveit::planning_interface::MoveGroupInterface::setPlanningTime(double seconds)
-// {
-//   impl_->setPlanningTime(seconds);
-// }
+void moveit::planning_interface::MoveGroupInterface::setPlanningTime(double seconds)
+{
+  impl_->setPlanningTime(seconds);
+}
 //
 // /** \brief Get time allowed to planner to solve problem before aborting */
 // double moveit::planning_interface::MoveGroupInterface::getPlanningTime() const
 // {
 //   return impl_->getPlanningTime();
 // }
-//
-// void moveit::planning_interface::MoveGroupInterface::setSupportSurfaceName(const std::string& name)
-// {
-//   impl_->setSupportSurfaceName(name);
-// }
-//
+
+void moveit::planning_interface::MoveGroupInterface::setSupportSurfaceName(const std::string& name)
+{
+  impl_->setSupportSurfaceName(name);
+}
+
 const std::string& moveit::planning_interface::MoveGroupInterface::getPlanningFrame() const
 {
   return impl_->getRobotModel()->getModelFrame();
