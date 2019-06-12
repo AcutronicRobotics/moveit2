@@ -616,28 +616,29 @@ protected:
   template <typename T>
   inline bool lookupParam(std::shared_ptr<rclcpp::Node>& node, const std::string& param, T& val, const T& default_val) const
   {
-    rclcpp::SyncParametersClient parameters_lookup(node);
-
-    if(parameters_lookup.has_parameter({ group_name_ + "/" + param })){
-      val = parameters_lookup.get_parameter( group_name_ + "/" + param, default_val);
-      return true;
-    }
-
-    if(parameters_lookup.has_parameter({ param })){
-      val = parameters_lookup.get_parameter(param, default_val);
-      return true;
-    }
-
-    if(parameters_lookup.has_parameter({  "robot_description_kinematics/" + group_name_ + "/" + param } )) {
-      val = parameters_lookup.get_parameter( "robot_description_kinematics/" + group_name_ + "/" + param , default_val);
-      return true;
-    }
-
-    if(parameters_lookup.has_parameter({  "robot_description_kinematics/" + param } )) {
-      val = parameters_lookup.get_parameter( "robot_description_kinematics/" + param , default_val);
-      return true;
-    }
-    return false;
+    // rclcpp::SyncParametersClient parameters_lookup(node);
+    //
+    // if(parameters_lookup.has_parameter({ group_name_ + "/" + param })){
+    //   val = parameters_lookup.get_parameter( group_name_ + "/" + param, default_val);
+    //   return true;
+    // }
+    //
+    // if(parameters_lookup.has_parameter({ param })){
+    //   val = parameters_lookup.get_parameter(param, default_val);
+    //   return true;
+    // }
+    //
+    // if(parameters_lookup.has_parameter({  "robot_description_kinematics/" + group_name_ + "/" + param } )) {
+    //   val = parameters_lookup.get_parameter( "robot_description_kinematics/" + group_name_ + "/" + param , default_val);
+    //   return true;
+    // }
+    //
+    // if(parameters_lookup.has_parameter({  "robot_description_kinematics/" + param } )) {
+    //   val = parameters_lookup.get_parameter( "robot_description_kinematics/" + param , default_val);
+    //   return true;
+    // }
+    // return false;
+    return true;
   }
 
   /** Store some core variables passed via initialize().
