@@ -616,6 +616,7 @@ protected:
   template <typename T>
   inline bool lookupParam(std::shared_ptr<rclcpp::Node>& node, const std::string& param, T& val, const T& default_val) const
   {
+    // TODO(anasarrak) Fix the following changes, it makes problems when lauching
     // rclcpp::SyncParametersClient parameters_lookup(node);
     //
     // if(parameters_lookup.has_parameter({ group_name_ + "/" + param })){
