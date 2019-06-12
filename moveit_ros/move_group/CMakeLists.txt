@@ -18,6 +18,10 @@ find_package(Eigen3 REQUIRED)
 find_package(moveit_ros_planning REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
 
 include_directories(include)
 
@@ -55,7 +59,7 @@ ament_target_dependencies(moveit_move_group_default_capabilities
   moveit_core
   class_loader
   rclcpp_action
-  moveit_ros_planning  
+  moveit_ros_planning
 )
 
 target_link_libraries(moveit_move_group_default_capabilities
@@ -82,7 +86,7 @@ target_link_libraries(list_move_group_capabilities
 )
 
 add_executable(move_group src/move_group.cpp)
-ament_target_dependencies(move_group
+ament_target_dependencies(move_group moveit_move_group_capabilities_base
   rclcpp
   Boost
   pluginlib
@@ -95,7 +99,6 @@ ament_target_dependencies(move_group
 )
 target_link_libraries(move_group
   moveit_move_group_capabilities_base
-  moveit_move_group_default_capabilities
 )
 
 install(TARGETS moveit_move_group_capabilities_base moveit_move_group_default_capabilities list_move_group_capabilities move_group
@@ -124,10 +127,10 @@ pluginlib_export_plugin_description_file(moveit_ros_move_group default_capabilit
 
 ament_export_include_directories(include ${EIGEN3_INCLUDE_DIR})
 
-# ament_export_libraries(moveit_move_group_capabilities_base)
-# ament_export_dependencies(moveit_core)
-# ament_export_dependencies(moveit_ros_planning)
-# ament_export_dependencies(tf2_geometry_msgs)
-# ament_export_dependencies(class_loader)
+ament_export_libraries(moveit_move_group_capabilities_base)
+ament_export_dependencies(moveit_core)
+ament_export_dependencies(moveit_ros_planning)
+ament_export_dependencies(tf2_geometry_msgs)
+ament_export_dependencies(class_loader)
 
 ament_package()
