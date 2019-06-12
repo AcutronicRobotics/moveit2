@@ -20,7 +20,7 @@ find_package(Eigen3 REQUIRED)
 find_package(Boost REQUIRED thread system filesystem date_time program_options)
 
 # pluginlib_export_plugin_description_file("pick_place/cfg/PickPlaceDynamicReconfigure.cfg")
-
+pluginlib_export_plugin_description_file(moveit_ros_move_group pick_place_capability_plugin_description.xml)
 
 include_directories(pick_place/include)
 include_directories(move_group_pick_place_capability/include)
