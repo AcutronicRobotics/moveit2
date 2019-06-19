@@ -1039,8 +1039,10 @@ public:
       switch(result_tmp.code){
         case rclcpp_action::ResultCode::ABORTED:
           RCLCPP_ERROR(node_->get_logger(), "ABORTED");
+          break;
         case rclcpp_action::ResultCode::CANCELED:
           RCLCPP_ERROR(node_->get_logger(), "CANCELED");
+          break;
         default:
           RCLCPP_ERROR(node_->get_logger(), "Unknown result code");
       }
