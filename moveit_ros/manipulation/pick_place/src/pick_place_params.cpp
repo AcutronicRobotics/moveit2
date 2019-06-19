@@ -46,7 +46,7 @@ class DynamicReconfigureImpl
 public:
   DynamicReconfigureImpl()
   {
-    node_ = rclcpp::Node::make_shared("~/pick_place");
+    node_ = rclcpp::Node::make_shared("pick_place");
     node_->declare_parameter("max_attempted_states_per_pose");
     node_->declare_parameter("max_consecutive_fail_attempts");
     node_->declare_parameter("cartesian_motion_step_size");
