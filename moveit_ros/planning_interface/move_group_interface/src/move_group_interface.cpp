@@ -730,6 +730,7 @@ public:
 
   MoveItErrorCode pick(const std::string& object, const std::vector<moveit_msgs::msg::Grasp>& grasps, bool plan_only = false)
   {
+    std::cout << "PICKK" << '\n';
     if (!pick_action_client_)
     {
       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "Pick action client not found");
@@ -740,7 +741,7 @@ public:
       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "Pick action server not connected");
       return MoveItErrorCode(moveit_msgs::msg::MoveItErrorCodes::FAILURE);
     }
-
+std::cout << "PICKK2" << '\n';
     moveit_msgs::action::Pickup::Goal goal;
     constructGoal(goal, object);
     goal.possible_grasps = grasps;
@@ -750,8 +751,18 @@ public:
     goal.planning_options.replan_delay = replan_delay_;
     goal.planning_options.planning_scene_diff.is_diff = true;
     goal.planning_options.planning_scene_diff.robot_state.is_diff = true;
+std::cout << "PICKK3" << '\n';
 
-    auto goal_handle_future = pick_action_client_->async_send_goal(goal);
+    rclcpp_action::ClientGoalHandle<moveit_msgs::action::Pickup>::WrappedResult res;
+    auto send_goal_options = rclcpp_action::Client<moveit_msgs::action::Pickup>::SendGoalOptions();
+
+    send_goal_options.result_callback =
+    [&res](const rclcpp_action::ClientGoalHandle<moveit_msgs::action::Pickup>::WrappedResult & result) mutable
+    {
+      res = result;
+    };
+
+    auto goal_handle_future = pick_action_client_->async_send_goal(goal,send_goal_options);
     if (rclcpp::spin_until_future_complete(node_, goal_handle_future) !=
        rclcpp::executor::FutureReturnCode::SUCCESS)
      {
@@ -763,19 +774,34 @@ public:
        RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "Goal was rejected by server");
        return MoveItErrorCode(moveit_msgs::msg::MoveItErrorCodes::FAILURE);
      }
-
+std::cout << "PICKK4" << '\n';
      auto result_future = goal_handle->async_result();
-
+std::cout << "PICKK5" << '\n';
      RCLCPP_INFO(LOGGER_MOVE_GROUP_INTERFACE, "Waiting for result");
-     if (rclcpp::spin_until_future_complete(node_, result_future) !=
-       rclcpp::executor::FutureReturnCode::SUCCESS)
-     {
-       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "get result call failed :(");
-       return 1;
-     }
+     // if (rclcpp::spin_until_future_complete(node_, result_future) !=
+     //   rclcpp::executor::FutureReturnCode::SUCCESS)
+     // {
+     //   RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "get result call failed ");
+     //   return 1;
+     // }
 
+     switch (res.code) {
+        case rclcpp_action::ResultCode::SUCCEEDED:
+          RCLCPP_ERROR(node_->get_logger(), "PICKUP Goal was SUCCEEDED");
+          break;
+        case rclcpp_action::ResultCode::ABORTED:
+          RCLCPP_ERROR(node_->get_logger(), "PICKUP Goal was aborted");
+          break;
+        case rclcpp_action::ResultCode::CANCELED:
+          RCLCPP_ERROR(node_->get_logger(), "PICKUP Goal was canceled");
+          break;
+        default:
+          RCLCPP_ERROR(node_->get_logger(), "Unknown result code PICKUP ");
+          break;
+      }
+     std::cout << "PICKK6" << '\n';
      auto wrapped_result = result_future.get();
-     return MoveItErrorCode(wrapped_result.result->error_code);
+     return MoveItErrorCode(res.result->error_code);
      // switch(wrapped_result.code) {
      //   case rclcpp_action::ResultCode::SUCCEEDED:
      //     return MoveItErrorCode(wrapped_result.result->error_code);
