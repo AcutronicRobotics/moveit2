@@ -39,22 +39,22 @@
 #define MOVEIT_PLUGINS_GRIPPER_CONTROLLER_HANDLE
 
 #include <moveit_simple_controller_manager/action_based_controller_handle.h>
-#include <control_msgs/action/gripper_command.hpp>
+#include <control_msgs/action/gripper_command_action.hpp>
 #include <set>
 
 namespace moveit_simple_controller_manager
 {
 /*
- * This is an interface for a gripper using control_msgs/GripperCommandAction
+ * This is an interface for a gripper using control_msgs/GripperCommandActionAction
  * action interface (single DOF).
  */
-class GripperControllerHandle : public ActionBasedControllerHandle<control_msgs::action::GripperCommand>
+class GripperControllerHandle : public ActionBasedControllerHandle<control_msgs::action::GripperCommandAction>
 {
    rclcpp::Logger LOGGER_GRIPPER_CONTROL_HANDLE = rclcpp::get_logger("moveit_simple_controller_manager").get_child("GripperController");
 public:
   /* Topics will map to name/ns/goal, name/ns/result, etc */
   GripperControllerHandle(const std::string& name, std::shared_ptr<rclcpp::Node>& node)
-    : ActionBasedControllerHandle<control_msgs::action::GripperCommand>(name, node)
+    : ActionBasedControllerHandle<control_msgs::action::GripperCommandAction>(name, node)
     , allow_failure_(false)
     , parallel_jaw_gripper_(false)
   {
@@ -112,7 +112,7 @@ public:
     }
 
     // goal to be sent
-    control_msgs::action::GripperCommand::Goal goal;
+    control_msgs::action::GripperCommandAction::Goal goal;
     goal.command.position = 0.0;
     goal.command.max_effort = 0.0;
 
@@ -174,7 +174,7 @@ public:
 
 private:
   void controllerDoneCallback(const rclcpp_action::ResultCode& state,
-                              const std::shared_ptr<const control_msgs::action::GripperCommand::Result>& result)
+                              const std::shared_ptr<const control_msgs::action::GripperCommandAction::Result>& result)
   {
     if (state == rclcpp_action::ResultCode::ABORTED && allow_failure_)
       finishControllerExecution(rclcpp_action::ResultCode::ABORTED);
@@ -187,7 +187,7 @@ private:
     RCLCPP_DEBUG(LOGGER_GRIPPER_CONTROL_HANDLE, "%s started execution",name_.c_str());
   }
 
-  void controllerFeedbackCallback(const std::shared_ptr<const control_msgs::action::GripperCommand::Feedback>& feedback)
+  void controllerFeedbackCallback(const std::shared_ptr<const control_msgs::action::GripperCommandAction::Feedback>& feedback)
   {
   }
 
@@ -208,11 +208,11 @@ private:
   bool parallel_jaw_gripper_;
 
   /*
-   * A GripperCommand message has only a single float64 for the
+   * A GripperCommandAction message has only a single float64 for the
    * "command", thus only a single joint angle can be sent -- however,
    * due to the complexity of making grippers look correct in a URDF,
    * they typically have >1 joints. The "command_joint" is the joint
-   * whose position value will be sent in the GripperCommand action. A
+   * whose position value will be sent in the GripperCommandAction action. A
    * set of names is provided for acceptable joint names. If any of
    * the joints specified is found, the value corresponding to that
    * joint is considered the command.
