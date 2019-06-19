@@ -36,8 +36,12 @@ int main(int argc, char * argv[])
   node->declare_parameter("robot_description_kinematics.manipulator.kinematics_solver", "kdl_kinematics_plugin/KDLKinematicsPlugin");
   node->declare_parameter("moveit_controller_manager", "moveit_simple_controller_manager/MoveItSimpleControllerManager");
   node->declare_parameter("planning_plugin", "ompl_interface/OMPLPlanner");
-
+  node->declare_parameter("controller_list.name","fake_arm_controller");
   node->declare_parameter("moveit_manage_controllers", true);
+  node->declare_parameter("allow_trajectory_execution", true);
+  // auto parameters_client = std::make_shared<rclcpp::SyncParametersClient>(node);
+  //
+  // parameters_client->set_parameters({rclcpp::Parameter("moveit_controller_manager", "moveit_simple_controller_manager/MoveItSimpleControllerManager")});
 
   auto robot_description_semantic_pub = node->create_publisher<std_msgs::msg::String>(
     "robot_description_semantic", qos);
