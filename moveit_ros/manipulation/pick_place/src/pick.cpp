@@ -83,7 +83,7 @@ bool PickPlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene,
     {
       end_effector = eefs.front();
       if (eefs.size() > 1)
-        RCLCPP_WARN(node_->get_logger(), "Choice of end-effector for group '%s' is ambiguous. Assuming '%s'",
+        RCLCPP_WARN(rclcpp::get_logger("moveit_ros_manipulation").get_child("pick"), "Choice of end-effector for group '%s' is ambiguous. Assuming '%s'",
                     planning_group, end_effector);
     }
   }
@@ -98,28 +98,27 @@ bool PickPlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene,
     planning_group = jmg->getEndEffectorParentGroup().first;
     if (planning_group.empty())
     {
-      RCLCPP_ERROR(node_->get_logger(), "No parent group to plan in was identified based on end-effector '%s'. Please "
+      RCLCPP_ERROR(rclcpp::get_logger("moveit_ros_manipulation").get_child("pick"), "No parent group to plan in was identified based on end-effector '%s'. Please "
                                         "define a parent group in the SRDF.",
                    end_effector);
       error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GROUP_NAME;
       return false;
     }
     else
-      RCLCPP_INFO(node_->get_logger(), "Assuming the planning group for end effector '%s' is '%s'", end_effector,
+      RCLCPP_INFO(rclcpp::get_logger("moveit_ros_manipulation").get_child("pick"), "Assuming the planning group for end effector '%s' is '%s'", end_effector,
                   planning_group);
   }
   const robot_model::JointModelGroup* eef =
       end_effector.empty() ? nullptr : planning_scene->getRobotModel()->getEndEffector(end_effector);
   if (!eef)
   {
-    RCLCPP_ERROR(node_->get_logger(), "No end-effector specified for pick action");
+    RCLCPP_ERROR(rclcpp::get_logger("moveit_ros_manipulation").get_child("pick"), "No end-effector specified for pick action");
     error_code_.val = moveit_msgs::msg::MoveItErrorCodes::INVALID_GROUP_NAME;
     return false;
   }
   const std::string& ik_link = eef->getEndEffectorParentGroup().second;
 
   auto start_time = std::chrono::system_clock::now();
-
   // construct common data for possible manipulation plans
   ManipulationPlanSharedDataPtr plan_data(new ManipulationPlanSharedData());
   ManipulationPlanSharedDataConstPtr const_plan_data = plan_data;
@@ -190,26 +189,27 @@ bool PickPlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene,
     p->retreat_posture_ = g.grasp_posture;
     pipeline_.push(p);
   }
-
   // wait till we're done
   waitForPipeline(endtime);
   pipeline_.stop();
 
   auto last_plan_time_ = std::chrono::system_clock::now() - start_time;
-  long last_plan_time_nsec = std::chrono::duration_cast<std::chrono::seconds>(last_plan_time_).count();
-  double last_plan_time_sec = 1.0e-9 * last_plan_time_sec;
-  if (!getSuccessfulManipulationPlans().empty())
+  long last_plan_time_nsec = std::chrono::duration_cast<std::chrono::nanoseconds>(last_plan_time_).count();
+  double last_plan_time_sec = 1.0e-9 * last_plan_time_nsec;
+  if (!getSuccessfulManipulationPlans().empty()){
     error_code_.val = moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
+    }
   else
   {
-    if (last_plan_time_sec > timeout)
+    if (last_plan_time_sec > timeout){
       error_code_.val = moveit_msgs::msg::MoveItErrorCodes::TIMED_OUT;
+      }
     else
     {
       error_code_.val = moveit_msgs::msg::MoveItErrorCodes::PLANNING_FAILED;
       if (!goal.possible_grasps.empty())
       {
-        RCLCPP_WARN(node_->get_logger(), "All supplied grasps failed. Retrying last grasp in verbose mode.");
+        RCLCPP_WARN(rclcpp::get_logger("moveit_ros_manipulation").get_child("pick"), "All supplied grasps failed. Retrying last grasp in verbose mode.");
         // everything failed. we now start the pipeline again in verbose mode for one grasp
         initialize();
         pipeline_.setVerbose(true);
@@ -221,8 +221,7 @@ bool PickPlan::plan(const planning_scene::PlanningSceneConstPtr& planning_scene,
       }
     }
   }
-  RCLCPP_INFO(node_->get_logger(), "Pickup planning completed after %lf seconds", last_plan_time_sec);
-
+  RCLCPP_INFO(rclcpp::get_logger("moveit_ros_manipulation").get_child("pick"), "Pickup planning completed after %lf seconds", last_plan_time_sec);
   return error_code_.val == moveit_msgs::msg::MoveItErrorCodes::SUCCESS;
 }
 
