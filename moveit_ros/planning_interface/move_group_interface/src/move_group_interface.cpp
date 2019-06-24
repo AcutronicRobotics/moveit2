@@ -678,6 +678,7 @@ public:
   MoveItErrorCode place(const std::string& object, const std::vector<moveit_msgs::msg::PlaceLocation>& locations,
                         bool plan_only = false)
   {
+    RCLCPP_ERROR(node_->get_logger(), "PlaceMG1");
     if (!place_action_client_)
     {
       RCLCPP_ERROR(node_->get_logger(), "Place action client not found");
@@ -688,6 +689,7 @@ public:
       RCLCPP_ERROR(node_->get_logger(), "Place action server not connected");
       return MoveItErrorCode(moveit_msgs::msg::MoveItErrorCodes::FAILURE);
     }
+    RCLCPP_ERROR(node_->get_logger(), "PlaceMG2");
     moveit_msgs::action::Place::Goal goal;
     constructGoal(goal, object);
     goal.place_locations = locations;
@@ -698,33 +700,68 @@ public:
     goal.planning_options.planning_scene_diff.is_diff = true;
     goal.planning_options.planning_scene_diff.robot_state.is_diff = true;
 
-    auto goal_handle_future = place_action_client_->async_send_goal(goal);
-    RCLCPP_DEBUG(node_->get_logger(), "Sent place goal with %d locations", (int)goal.place_locations.size());
+    rclcpp_action::ClientGoalHandle<moveit_msgs::action::Place>::WrappedResult res;
+    auto send_goal_options = rclcpp_action::Client<moveit_msgs::action::Place>::SendGoalOptions();
 
-    auto result_future = goal_handle_future.get()->async_result();
-
-    // if (!place_action_client_->waitForResult())
-    // {
-      RCLCPP_INFO(node_->get_logger(), "Place action returned early");
-    // }
-    auto result = result_future.get();
-    if (result_future.get().code == rclcpp_action::ResultCode::SUCCEEDED)
+    send_goal_options.result_callback =
+    [&res](const rclcpp_action::ClientGoalHandle<moveit_msgs::action::Place>::WrappedResult & result) mutable
     {
-      return MoveItErrorCode(result.result->error_code);
+      res = result;
+    };
+    RCLCPP_ERROR(node_->get_logger(), "PlaceMG3");
+    auto goal_handle_future = place_action_client_->async_send_goal(goal,send_goal_options);
+    RCLCPP_DEBUG(node_->get_logger(), "Sent place goal with %d locations", goal.place_locations.size());
+
+    if (rclcpp::spin_until_future_complete(node_, goal_handle_future) !=
+       rclcpp::executor::FutureReturnCode::SUCCESS)
+     {
+       RCLCPP_INFO(LOGGER_MOVE_GROUP_INTERFACE, "Place action returned early");
+       return MoveItErrorCode(moveit_msgs::msg::MoveItErrorCodes::FAILURE);
+     }
+
+     rclcpp_action::ClientGoalHandle<moveit_msgs::action::Place>::SharedPtr goal_handle = goal_handle_future.get();
+
+     if (!goal_handle) {
+       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "Goal was rejected by server");
+       // return MoveItErrorCode(moveit_msgs::msg::MoveItErrorCodes::FAILURE);
+     }
+
+    auto result_future = place_action_client_->async_get_result(goal_handle);
+
+    RCLCPP_INFO(node_->get_logger(), "Waiting for result");
+
+     if (rclcpp::spin_until_future_complete(node_, result_future) !=
+       rclcpp::executor::FutureReturnCode::SUCCESS)
+     {
+       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "get result call failed :(");
+       // return 1;
+     }
+
+    RCLCPP_ERROR(node_->get_logger(), "PlaceMG4");
+
+    if (res.code == rclcpp_action::ResultCode::SUCCEEDED)
+    {
+      return MoveItErrorCode(res.result->error_code);
     }
     else
     {
-      switch(result.code){
+      switch(res.code){
+        case rclcpp_action::ResultCode::SUCCEEDED:
+          RCLCPP_ERROR(node_->get_logger(), "PLACE was SUCCEEDED");
+          break;
         case rclcpp_action::ResultCode::ABORTED:
-          RCLCPP_ERROR(node_->get_logger(), "ABORTED");
+          RCLCPP_ERROR(node_->get_logger(), "PLACE was aborted");
+          break;
         case rclcpp_action::ResultCode::CANCELED:
-          RCLCPP_ERROR(node_->get_logger(), "CANCELED");
+          RCLCPP_ERROR(node_->get_logger(), "PLACE was canceled");
+          break;
         default:
-          RCLCPP_ERROR(node_->get_logger(), "Unknown result code");
+          RCLCPP_ERROR(node_->get_logger(), "Unknown result code Place");
+          break;
         }
       // RCLCPP_WARN(node_->get_logger(), "Fail: %s: %s",place_action_client_->getState().toString(),
       //                 place_action_client_->getState().getText());
-      return MoveItErrorCode(result.result->error_code);
+      return MoveItErrorCode(res.result->error_code);
     }
   }
 
@@ -755,18 +792,19 @@ std::cout << "PICKK3" << '\n';
 
     rclcpp_action::ClientGoalHandle<moveit_msgs::action::Pickup>::WrappedResult res;
     auto send_goal_options = rclcpp_action::Client<moveit_msgs::action::Pickup>::SendGoalOptions();
-
+    bool check = false;
     send_goal_options.result_callback =
-    [&res](const rclcpp_action::ClientGoalHandle<moveit_msgs::action::Pickup>::WrappedResult & result) mutable
+    [&res,&check](const rclcpp_action::ClientGoalHandle<moveit_msgs::action::Pickup>::WrappedResult & result) mutable
     {
       res = result;
+      check = true;
     };
 
     auto goal_handle_future = pick_action_client_->async_send_goal(goal,send_goal_options);
     if (rclcpp::spin_until_future_complete(node_, goal_handle_future) !=
        rclcpp::executor::FutureReturnCode::SUCCESS)
      {
-       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "send goal call failed :(");
+       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "send goal call failed ");
        return MoveItErrorCode(moveit_msgs::msg::MoveItErrorCodes::FAILURE);
      }
      auto goal_handle = goal_handle_future.get();
@@ -774,26 +812,30 @@ std::cout << "PICKK3" << '\n';
        RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "Goal was rejected by server");
        return MoveItErrorCode(moveit_msgs::msg::MoveItErrorCodes::FAILURE);
      }
-std::cout << "PICKK4" << '\n';
-     auto result_future = goal_handle->async_result();
-std::cout << "PICKK5" << '\n';
-     RCLCPP_INFO(LOGGER_MOVE_GROUP_INTERFACE, "Waiting for result");
-     // if (rclcpp::spin_until_future_complete(node_, result_future) !=
-     //   rclcpp::executor::FutureReturnCode::SUCCESS)
-     // {
-     //   RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "get result call failed ");
-     //   return 1;
+
+     // while(!check){
+     //   std::this_thread::sleep_for( std::chrono::milliseconds(100) );
+     //   rclcpp::spin_some(node_);
      // }
+
+     auto result_future = goal_handle->async_result();
+     RCLCPP_INFO(LOGGER_MOVE_GROUP_INTERFACE, "Waiting for result");
+     if (rclcpp::spin_until_future_complete(node_, result_future) !=
+       rclcpp::executor::FutureReturnCode::SUCCESS)
+     {
+       RCLCPP_ERROR(LOGGER_MOVE_GROUP_INTERFACE, "get result call failed ");
+       return 1;
+     }
 
      switch (res.code) {
         case rclcpp_action::ResultCode::SUCCEEDED:
-          RCLCPP_ERROR(node_->get_logger(), "PICKUP Goal was SUCCEEDED");
+          RCLCPP_ERROR(node_->get_logger(), "PICKUP was SUCCEEDED");
           break;
         case rclcpp_action::ResultCode::ABORTED:
-          RCLCPP_ERROR(node_->get_logger(), "PICKUP Goal was aborted");
+          RCLCPP_ERROR(node_->get_logger(), "PICKUP was aborted");
           break;
         case rclcpp_action::ResultCode::CANCELED:
-          RCLCPP_ERROR(node_->get_logger(), "PICKUP Goal was canceled");
+          RCLCPP_ERROR(node_->get_logger(), "PICKUP was canceled");
           break;
         default:
           RCLCPP_ERROR(node_->get_logger(), "Unknown result code PICKUP ");
