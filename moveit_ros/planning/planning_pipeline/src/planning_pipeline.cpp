@@ -176,7 +176,7 @@ void planning_pipeline::PlanningPipeline::displayComputedMotionPlans(bool flag)
   if (display_computed_motion_plans_ && !flag)
     display_path_publisher_.reset();
   else if (!display_computed_motion_plans_ && flag)
-    display_path_publisher_ = node_->create_publisher<moveit_msgs::msg::DisplayTrajectory>(DISPLAY_PATH_TOPIC);
+    display_path_publisher_ = node_->create_publisher<moveit_msgs::msg::DisplayTrajectory>(DISPLAY_PATH_TOPIC,10);
   display_computed_motion_plans_ = flag;
 }
 
@@ -185,7 +185,7 @@ void planning_pipeline::PlanningPipeline::publishReceivedRequests(bool flag)
   if (publish_received_requests_ && !flag)
     received_request_publisher_.reset();
   else if (!publish_received_requests_ && flag)
-    received_request_publisher_ = node_->create_publisher<moveit_msgs::msg::MotionPlanRequest>(MOTION_PLAN_REQUEST_TOPIC);
+    received_request_publisher_ = node_->create_publisher<moveit_msgs::msg::MotionPlanRequest>(MOTION_PLAN_REQUEST_TOPIC,10);
   publish_received_requests_ = flag;
 }
 
@@ -194,7 +194,7 @@ void planning_pipeline::PlanningPipeline::checkSolutionPaths(bool flag)
   if (check_solution_paths_ && !flag)
     contacts_publisher_.reset();
   else if (!check_solution_paths_ && flag)
-    contacts_publisher_ = node_->create_publisher<visualization_msgs::msg::MarkerArray>(MOTION_CONTACTS_TOPIC);
+    contacts_publisher_ = node_->create_publisher<visualization_msgs::msg::MarkerArray>(MOTION_CONTACTS_TOPIC,100);
   check_solution_paths_ = flag;
 }
 
