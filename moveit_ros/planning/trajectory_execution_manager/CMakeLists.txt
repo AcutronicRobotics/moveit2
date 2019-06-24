@@ -4,7 +4,7 @@ add_library(${MOVEIT_LIB_NAME} SHARED src/trajectory_execution_manager.cpp)
 set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
 ament_target_dependencies(${MOVEIT_LIB_NAME}
   moveit_planning_scene
-  moveit_planning_scene_monitor 
+  moveit_planning_scene_monitor
   moveit_robot_model_loader
   moveit_robot_state
   rclcpp
@@ -13,9 +13,9 @@ ament_target_dependencies(${MOVEIT_LIB_NAME}
   pluginlib
 )
 target_link_libraries(${MOVEIT_LIB_NAME}
-  moveit_planning_scene_monitor   
+  moveit_planning_scene_monitor
   ${moveit_robot_state_LIBRARIES}
-  ${moveit_planning_scene_LIBRARIES}  
+  ${moveit_planning_scene_LIBRARIES}
 )
 
 install(TARGETS ${MOVEIT_LIB_NAME}
@@ -28,7 +28,7 @@ if(BUILD_TESTING)
   add_library(test_controller_manager_plugin SHARED test/test_moveit_controller_manager_plugin.cpp)
   set_target_properties(test_controller_manager_plugin PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
 
-  target_link_libraries(test_controller_manager_plugin
+  target_link_libraries(test_controller_manager_plugin PUBLIC
     ${MOVEIT_LIB_NAME}
     ${rclcpp_LIBRARIES}
   )
@@ -67,8 +67,8 @@ if(BUILD_TESTING)
     ${moveit_core_LIBRARIES}
   )
 
-  install(TARGETS test_controller_manager test_controller_manage_subcriber test_controller_manager_publisher test_publish_dummy_joint_states
+  install(TARGETS test_controller_manager test_controller_manage_subcriber test_controller_manager_publisher test_publish_dummy_joint_states test_controller_manager_plugin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
-  RUNTIME DESTINATION lib/moveit_ros_planning)
+    RUNTIME DESTINATION lib/moveit_ros_planning)
 endif()
