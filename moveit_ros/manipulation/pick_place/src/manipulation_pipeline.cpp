@@ -223,7 +223,7 @@ void ManipulationPipeline::reprocessLastFailure()
   failed_.pop_back();
   plan->clear();
   queue_.push_back(plan);
-  RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Re-added last failed plan for pipeline '%s'. Queue is now of size %f",
+  RCLCPP_INFO(LOGGER_MANIPULATION_PIPELINE, "Re-added last failed plan for pipeline '%s'. Queue is now of size %d",
               name_.c_str(), queue_.size());
   queue_access_cond_.notify_all();
 }
