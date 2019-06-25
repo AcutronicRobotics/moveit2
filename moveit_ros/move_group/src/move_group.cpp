@@ -195,7 +195,7 @@ int main(int argc, char** argv)
   signal(SIGINT, signalHandler);
   rclcpp::init(argc, argv);
   auto node = rclcpp::Node::make_shared(move_group::NODE_NAME);
-
+  node->declare_parameter("allow_trajectory_execution", true);
   rclcpp::Clock::SharedPtr clock = std::make_shared<rclcpp::Clock>(RCL_SYSTEM_TIME);
   // On ROS2 the passed value is a shared Clock
   std::shared_ptr<tf2_ros::Buffer> tf_buffer = std::make_shared<tf2_ros::Buffer>(clock);
