@@ -27,6 +27,9 @@
   <build_depend>libqt5-opengl-dev</build_depend>
   <build_depend>qtbase5-dev</build_depend>
   <build_depend>moveit_core</build_depend>
+  <build_depend>rviz_common</build_depend>
+  <build_depend>rviz_default_plugins</build_depend>
+  <build_depend>rviz_ogre_vendor</build_depend>
 
   <exec_depend>moveit_core</exec_depend>
   <exec_depend>geometric_shapes</exec_depend>
