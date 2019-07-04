@@ -87,15 +87,6 @@ public:
 
   ~PR2ArmIKSolver() override{};
 
-// TODO: simplify after kinetic support is dropped
-#define KDL_VERSION_LESS(a, b, c) ((KDL_VERSION) < ((a << 16) | (b << 8) | c))
-#if KDL_VERSION_LESS(1, 4, 0)
-  void updateInternalDataStructures();
-#else
-  void updateInternalDataStructures();
-#endif
-#undef KDL_VERSION_LESS
-
   /**
    * @brief The PR2 inverse kinematics solver
    */
@@ -194,7 +185,8 @@ public:
    */
   bool searchPositionIK(
       const geometry_msgs::msg::Pose& ik_pose, const std::vector<double>& ik_seed_state, double timeout,
-      std::vector<double>& solution, const IKCallbackFn& solution_callback, moveit_msgs::msg::MoveItErrorCodes& error_code,
+      std::vector<double>& solution, const IKCallbackFn& solution_callback,
+      moveit_msgs::msg::MoveItErrorCodes& error_code,
       const kinematics::KinematicsQueryOptions& options = kinematics::KinematicsQueryOptions()) const override;
 
   /**

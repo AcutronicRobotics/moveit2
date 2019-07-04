@@ -344,11 +344,11 @@ void ompl_interface::OMPLInterface::loadPlannerConfigurations()
 
   for (const std::pair<std::string, planning_interface::PlannerConfigurationSettings>& config : pconfig)
   {
-    RCLCPP_DEBUG(node_->get_logger(), "Parameters for configuration '%s'", config.first);
+    RCLCPP_DEBUG(node_->get_logger(), "Parameters for configuration '%s'", config.first.c_str());
 
     for (const std::pair<std::string, std::string>& parameters : config.second.config)
     {
-      RCLCPP_DEBUG(node_->get_logger(), "parameters - %s = %s", parameters.first, parameters.second);
+      RCLCPP_DEBUG(node_->get_logger(), "parameters - %s = %s", parameters.first.c_str(), parameters.second.c_str());
     }
   }
 

@@ -37,12 +37,11 @@
 #include <moveit/constraint_samplers/constraint_sampler_tools.h>
 #include <moveit/constraint_samplers/constraint_sampler_manager.h>
 
-rclcpp::Logger LOGGER_CONTRAINT_SAMPLERS_TOOLS = rclcpp::get_logger("moveit").get_child("constraint_samplers");
-
 void constraint_samplers::visualizeDistribution(const moveit_msgs::msg::Constraints& constr,
                                                 const planning_scene::PlanningSceneConstPtr& scene,
                                                 const std::string& group, const std::string& link_name,
-                                                unsigned int sample_count, visualization_msgs::msg::MarkerArray& markers)
+                                                unsigned int sample_count,
+                                                visualization_msgs::msg::MarkerArray& markers)
 {
   visualizeDistribution(ConstraintSamplerManager::selectDefaultSampler(scene, group, constr), scene->getCurrentState(),
                         link_name, sample_count, markers);
@@ -67,11 +66,7 @@ double constraint_samplers::countSamplesPerSecond(const ConstraintSamplerPtr& sa
   robot_state::RobotState ks(reference_state);
   unsigned long int valid = 0;
   unsigned long int total = 0;
-  //TODO RCLCPP::WallTimer has not a .now() function, and there is no wallDuration (they use std::chrono::nanoseconds)
-  // I'll use rclcpp::time, but this is something to fix.
-  rclcpp::Duration duration(1,0);
-  rclcpp::Time end = rclcpp::Clock().now() + duration;
-  // ros::WallTime end = ros::WallTime::now() + ros::WallDuration(1.0);
+  rclcpp::Time end = rclcpp::Clock().now() + rclcpp::Duration(1.0);
   do
   {
     static const unsigned int N = 10;
@@ -99,7 +94,6 @@ void constraint_samplers::visualizeDistribution(const ConstraintSamplerPtr& samp
   if (!lm)
     return;
   robot_state::RobotState ks(reference_state);
-  rclcpp::Time stamp = rclcpp::Clock().now();
   std_msgs::msg::ColorRGBA color;
   color.r = 1.0f;
   color.g = 0.0f;
@@ -111,7 +105,7 @@ void constraint_samplers::visualizeDistribution(const ConstraintSamplerPtr& samp
       continue;
     const Eigen::Vector3d& pos = ks.getGlobalLinkTransform(lm).translation();
     visualization_msgs::msg::Marker mk;
-    mk.header.stamp = stamp;
+    mk.header.stamp = rclcpp::Clock(RCL_ROS_TIME).now();
     mk.header.frame_id = sampler->getJointModelGroup()->getParentModel().getModelFrame();
     mk.ns = "constraint_samples";
     mk.id = i;

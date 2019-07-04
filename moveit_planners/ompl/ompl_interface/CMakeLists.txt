@@ -20,10 +20,20 @@ add_library(${MOVEIT_LIB_NAME} SHARED
   src/detail/constrained_goal_sampler.cpp
 )
 set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
-
 find_package(OpenMP REQUIRED)
 
-target_link_libraries(${MOVEIT_LIB_NAME} ${OMPL_LIBRARIES} ${rclcpp_LIBRARIES} ${Boost_LIBRARIES})
+ament_target_dependencies(${MOVEIT_LIB_NAME}
+  random_numbers
+  moveit_core
+  moveit_ros_planning
+)
+
+target_link_libraries(${MOVEIT_LIB_NAME} 
+  ${OMPL_LIBRARIES} 
+  ${rclcpp_LIBRARIES} 
+  ${Boost_LIBRARIES}
+)
+  
 include_directories(${moveit_core_INCLUDE_DIRS})
 include_directories(SYSTEM ${EIGEN3_INCLUDE_DIRS})
 set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")

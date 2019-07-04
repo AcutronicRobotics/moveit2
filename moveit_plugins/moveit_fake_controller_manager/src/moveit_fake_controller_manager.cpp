@@ -180,7 +180,7 @@ public:
         std::string pose_name = std::string(param[i].pose);
         if (!robot_model->hasJointModelGroup(group_name))
         {
-          RCLCPP_WARN(node_->get_logger(), "Unknown joint model group: %s", group_name);
+          RCLCPP_WARN(node_->get_logger(), "Unknown joint model group: %s", group_name.c_str());
           continue;
         }
         moveit::core::JointModelGroup* jmg = robot_model->getJointModelGroup(group_name);
@@ -202,12 +202,12 @@ public:
           const moveit::core::JointModel* jm = robot_state.getJointModel(*jit);
           if (!jm)
           {
-            RCLCPP_WARN(node_->get_logger(), "Unknown joint: %s", *jit);
+            RCLCPP_WARN(node_->get_logger(), "Unknown joint: %s", (*jit).c_str());
             continue;
           }
           if (jm->getVariableCount() != 1)
           {
-            RCLCPP_WARN(node_->get_logger(), "Cannot handle multi-variable joint: %s", *jit);
+            RCLCPP_WARN(node_->get_logger(), "Cannot handle multi-variable joint: %s", (*jit).c_str());
             continue;
           }
 
@@ -241,7 +241,7 @@ public:
     if (it != controllers_.end())
       return it->second;
     else
-      RCLCPP_FATAL(node_->get_logger(),"No such controller: %s", name);
+      RCLCPP_FATAL(node_->get_logger(),"No such controller: %s", name.c_str());
     return moveit_controller_manager::MoveItControllerHandlePtr();
   }
 

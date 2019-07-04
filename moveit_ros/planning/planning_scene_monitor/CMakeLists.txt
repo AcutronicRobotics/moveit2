@@ -8,6 +8,8 @@ add_library(${MOVEIT_LIB_NAME} SHARED
 set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
 ament_target_dependencies(${MOVEIT_LIB_NAME}
   moveit_collision_plugin_loader
+  # moveit_occupancy_map_monitor
+  moveit_ros_perception
   message_filters
   urdf
   pluginlib

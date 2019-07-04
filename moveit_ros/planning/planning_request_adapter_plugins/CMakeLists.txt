@@ -12,13 +12,12 @@ set(SOURCE_FILES
 )
 
 add_library(${MOVEIT_LIB_NAME} SHARED ${SOURCE_FILES})
-
 set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_VERSION}")
-
 target_link_libraries(${MOVEIT_LIB_NAME}
   ${Boost_LIBRARIES}
   ${rclcpp_LIBRARIES}
   ${moveit_core_LIBRARIES}
+  ${class_loader_LIBRARIES}
 )
 
 

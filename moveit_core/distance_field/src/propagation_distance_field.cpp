@@ -41,10 +41,10 @@
 #include <boost/iostreams/filter/zlib.hpp>
 #include "rclcpp/rclcpp.hpp"
 
-rclcpp::Logger LOGGER_PROPAGATION_DISTANCE_FIELD = rclcpp::get_logger("moveit").get_child("distance_field");
-
 namespace distance_field
 {
+rclcpp::Logger LOGGER_PROPAGATION_DISTANCE_FIELD = rclcpp::get_logger("moveit").get_child("distance_field");
+
 PropagationDistanceField::PropagationDistanceField(double size_x, double size_y, double size_z, double resolution,
                                                    double origin_x, double origin_y, double origin_z,
                                                    double max_distance, bool propagate_negative)
@@ -169,19 +169,10 @@ void PropagationDistanceField::updatePointsInField(const EigenSTL::vector_Vector
     {
       new_not_in_current.push_back(new_not_old[i]);
     }
-    // RCLCPP_INFO(LOGGER_PROPAGATION_DISTANCE_FIELD, "Adding obstacle voxel %d %d %d", (*it).x(), (*it).y(), (*it).z());
   }
 
   removeObstacleVoxels(old_not_new);
   addNewObstacleVoxels(new_not_in_current);
-
-  // RCLCPP_DEBUG(LOGGER_PROPAGATION_DISTANCE_FIELD,  "new=" );
-  // print(points_added);
-  // RCLCPP_DEBUG(LOGGER_PROPAGATION_DISTANCE_FIELD,  "removed=" );
-  // print(points_removed);
-  // RCLCPP_DEBUG(LOGGER_PROPAGATION_DISTANCE_FIELD,  "obstacle_voxel_locations_=" );
-  // print(object_voxel_locations_);
-  // RCLCPP_DEBUG(LOGGER_PROPAGATION_DISTANCE_FIELD, "");
 }
 
 void PropagationDistanceField::addPointsToField(const EigenSTL::vector_Vector3d& points)
@@ -419,7 +410,7 @@ void PropagationDistanceField::propagatePositive()
       if (vptr->update_direction_ < 0 || vptr->update_direction_ > 26)
       {
         RCLCPP_ERROR(LOGGER_PROPAGATION_DISTANCE_FIELD, "PROGRAMMING ERROR: Invalid update direction detected: %d",
-                        vptr->update_direction_);
+                     vptr->update_direction_);
         continue;
       }
 
@@ -478,7 +469,7 @@ void PropagationDistanceField::propagateNegative()
       if (vptr->negative_update_direction_ < 0 || vptr->negative_update_direction_ > 26)
       {
         RCLCPP_ERROR(LOGGER_PROPAGATION_DISTANCE_FIELD, "PROGRAMMING ERROR: Invalid update direction detected: %d",
-                        vptr->update_direction_);
+                     vptr->update_direction_);
         continue;
       }
 

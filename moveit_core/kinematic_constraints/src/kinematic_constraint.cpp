@@ -859,7 +859,7 @@ void VisibilityConstraint::getMarkers(const robot_state::RobotState& state,
   rclcpp::Time stamp = rclcpp::Clock().now();
   delete m;
   mk.header.frame_id = robot_model_->getModelFrame();
-  mk.header.stamp = stamp;
+  mk.header.stamp = rclcpp::Clock().now();
   mk.ns = "constraints";
   mk.id = 1;
   mk.action = visualization_msgs::msg::Marker::ADD;
@@ -995,8 +995,9 @@ ConstraintEvaluationResult VisibilityConstraint::decide(const robot_state::Robot
   collision_detection::CollisionRequest req;
   collision_detection::CollisionResult res;
   collision_detection::AllowedCollisionMatrix acm;
-  acm.setDefaultEntry("cone", (boost::function<bool(collision_detection::Contact&)>)
-    boost::bind(&VisibilityConstraint::decideContact, this, _1));
+  collision_detection::DecideContactFn fn = std::bind(&VisibilityConstraint::decideContact, this, std::placeholders::_1);
+  acm.setDefaultEntry(std::string("cone"), fn);
+
   req.contacts = true;
   req.verbose = verbose;
   req.max_contacts = 1;

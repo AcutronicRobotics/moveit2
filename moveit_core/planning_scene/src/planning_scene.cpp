@@ -1084,17 +1084,20 @@ bool PlanningScene::loadGeometryFromStream(std::istream& in, const Eigen::Isomet
         if (!(in >> x >> y >> z))
         {
           RCLCPP_ERROR(LOGGER, "Improperly formatted translation in scene geometry file");
+          delete s;
           return false;
         }
         if (!(in >> rx >> ry >> rz >> rw))
         {
           RCLCPP_ERROR(LOGGER, "Improperly formatted rotation in scene geometry file");
+          delete s;
           return false;
         }
         float r, g, b, a;
         if (!(in >> r >> g >> b >> a))
         {
           RCLCPP_ERROR(LOGGER, "Improperly formatted color in scene geometry file");
+          delete s;
           return false;
         }
         if (s)
