@@ -10,7 +10,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     urdf = os.path.join(get_package_share_directory('mara_description'), 'urdf', 'mara_robot_gripper_140.urdf')
-    srdf = "/mnt/myfiles/github/moveitmaster/src/dependencies/moveit_resources/mara_moveit_config/config/mara.srdf"
+    srdf = "/mnt/myfiles/github/moveitcore/src/dependencies/moveit_resources/mara_moveit_config/config/mara.srdf"
     print(urdf)
     ld = LaunchDescription([
         Node(package='robot_state_publisher', node_executable='robot_state_publisher', output='screen', arguments=[urdf]),
