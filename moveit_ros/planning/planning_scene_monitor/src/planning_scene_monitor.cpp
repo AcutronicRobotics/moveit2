@@ -1288,16 +1288,15 @@ void PlanningSceneMonitor::setStateUpdateFrequency(double hz)
 
 void PlanningSceneMonitor::updateSceneWithCurrentState()
 {
-  rclcpp::Time time = rclcpp::Clock().now();
   if (current_state_monitor_)
   {
     std::vector<std::string> missing;
     if (!current_state_monitor_->haveCompleteState(missing) &&
-        (time - current_state_monitor_->getMonitorStartTime()).seconds() > 1.0)
+        (rclcpp::Clock().now() - current_state_monitor_->getMonitorStartTime()).seconds() > 1.0)
     {
       std::string missing_str = boost::algorithm::join(missing, ", ");
       RCUTILS_LOG_WARN_THROTTLE_NAMED(
-          RCUTILS_STEADY_TIME, 1, "The complete state of the robot is not yet known.  Missing %s", missing_str.c_str());
+          RCUTILS_STEADY_TIME, 1, "The complete state of the robot is not yet known.  Missing", missing_str.c_str());
     }
 
     {
