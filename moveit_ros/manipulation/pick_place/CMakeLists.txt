@@ -14,5 +14,8 @@ set_target_properties(${MOVEIT_LIB_NAME} PROPERTIES VERSION "${${PROJECT_NAME}_V
 
 target_link_libraries(${MOVEIT_LIB_NAME} ${rclcpp_LIBRARIES} ${Boost_LIBRARIES})
 
-install(TARGETS ${MOVEIT_LIB_NAME} LIBRARY DESTINATION lib)
+install(TARGETS ${MOVEIT_LIB_NAME}
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+        
 install(DIRECTORY include/ DESTINATION include)
