@@ -169,11 +169,6 @@ void RobotStateDisplay::changedEnableCollisionVisible()
   robot_->setCollisionVisible(enable_collision_visible_->getBool());
 }
 
-static bool operator!=(const std_msgs::msg::ColorRGBA& a, const std_msgs::msg::ColorRGBA& b)
-{
-  return a.r != b.r || a.g != b.g || a.b != b.b || a.a != b.a;
-}
-
 void RobotStateDisplay::setRobotHighlights(const moveit_msgs::msg::DisplayRobotState::_highlight_links_type& highlight_links)
 {
   if (highlight_links.empty() && highlights_.empty())

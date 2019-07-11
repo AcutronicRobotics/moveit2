@@ -50,7 +50,7 @@
 namespace planning_scene_monitor
 {
 
-typedef std::function<void(const sensor_msgs::msg::JointState::ConstPtr& joint_state)> JointStateUpdateCallback;
+typedef std::function<void(const sensor_msgs::msg::JointState::ConstSharedPtr& joint_state)> JointStateUpdateCallback;
 
 /** @class CurrentStateMonitor
     @brief Monitors the joint_states topic and tf to maintain the current state of the robot. */

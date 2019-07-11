@@ -530,7 +530,7 @@ private:
   void scenePublishingThread();
 
   // called by current_state_monitor_ when robot state (as monitored on joint state topic) changes
-  void onStateUpdate(const sensor_msgs::msg::JointState::ConstPtr& /*joint_state*/);
+  void onStateUpdate(const sensor_msgs::msg::JointState::ConstSharedPtr& /*joint_state*/);
 
   // called by state_update_timer_ when a state update it pending
   void stateUpdateTimerCallback(/*const ros::WallTimerEvent& event*/);

@@ -8,7 +8,7 @@ set(HEADERS
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Trajectory Display
-add_library(${MOVEIT_LIB_NAME}
+add_library(${MOVEIT_LIB_NAME} SHARED
   src/trajectory_display.cpp
   ${HEADERS}
 )
